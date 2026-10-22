@@ -27,6 +27,17 @@
     "title": "Algo salió mal",
     "description": "Ocurrió un error inesperado. Intenta de nuevo en unos momentos."
   },
+  "login": {
+    "metadataTitle": "Iniciar sesión",
+    "title": "Inicia sesión",
+    "subtitle": "Entra con tu teléfono o correo electrónico.",
+    "identifierLabel": "Teléfono o correo electrónico",
+    "identifierPlaceholder": "55 1234 5678 / tu@correo.com",
+    "submit": "Continuar",
+    "submitting": "Entrando…",
+    "errorTitle": "No pudimos iniciar sesión",
+    "demoAccounts": "Cuentas de prueba: ana@example.com o 55 1234 5678 (con movimientos), bruno@example.com (sin movimientos)."
+  },
   "errors": {
     "validation": {
       "IDENTIFIER_REQUIRED": "Ingresa tu teléfono o correo electrónico.",
