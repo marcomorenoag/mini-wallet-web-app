@@ -47,6 +47,8 @@ const layer = (name, allowed, { framework = false, runtimeMarkers = false } = {}
 const layerBoundaries = [
   layer("domain", ["domain"]),
   layer("ports", ["domain", "ports"]),
+  // Versioned API contracts are shared by server and client, so they only build on the domain.
+  layer("contracts", ["domain", "contracts"]),
   layer("application", ["domain", "ports", "application"]),
   layer("adapters", ["domain", "ports", "adapters"], { runtimeMarkers: true }),
 ];
