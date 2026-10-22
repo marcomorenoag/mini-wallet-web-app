@@ -4,7 +4,8 @@ import { assertNodeVersion } from "./scripts/assert-node-version";
 
 assertNodeVersion();
 
-const PORT = Number(process.env.PORT ?? 3000);
+// A dedicated port, so a local `npm run dev` on 3000 is never picked up by the tests.
+const PORT = Number(process.env.E2E_PORT ?? 3100);
 const baseURL = `http://localhost:${PORT}`;
 const isCI = Boolean(process.env.CI);
 
@@ -28,11 +29,13 @@ export default defineConfig({
     { name: "mobile-safari", use: { ...devices["iPhone 15"] } },
   ],
   webServer: {
-    // The production build is tested in CI; the dev server is reused locally for speed.
-    command: isCI ? `npm run build && npm run start -- -p ${PORT}` : `npm run dev -- -p ${PORT}`,
+    // The production build is always tested. Under the test runner, the Turbopack dev server keeps
+    // forcing HMR full reloads, which detaches elements mid-interaction and makes tests flaky.
+    command: `npm run build && npm run start -- -p ${PORT}`,
     url: `${baseURL}/api/health`,
-    reuseExistingServer: !isCI,
-    timeout: 120_000,
+    // Never reused, so a stale build is never tested.
+    reuseExistingServer: false,
+    timeout: 180_000,
     // Scenario overrides are disabled in production builds by default; E2E tests rely on them.
     env: { MOCK_SCENARIO_OVERRIDE: "enabled" },
   },

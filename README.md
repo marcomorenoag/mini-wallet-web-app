@@ -64,7 +64,7 @@ npm run dev                            # http://localhost:3000
 
 Vitest and Playwright refuse to start on a Node version older than the one pinned in `.nvmrc`, since jsdom crashes with an obscure `undici` error otherwise; `nvm use` fixes it.
 
-The E2E web server is started automatically: the dev server is reused locally, and the production build is tested when `CI` is set.
+The E2E web server is started automatically on port 3100 (`E2E_PORT`) from a fresh production build, locally and in CI. The dev server is not used: under the test runner, Turbopack HMR keeps forcing full page reloads, which makes interactions flaky.
 
 ## Mock data
 
