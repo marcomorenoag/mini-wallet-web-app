@@ -59,6 +59,50 @@
     "errorTitle": "No pudimos cargar tu información",
     "errorDescription": "Revisa tu conexión e intenta de nuevo."
   },
+  "transfer": {
+    "metadataTitle": "Nueva transferencia",
+    "title": "Nueva transferencia",
+    "back": "Regresar",
+    "stepProgress": "Paso {current} de {total}",
+    "amount": {
+      "title": "¿Cuánto quieres enviar?",
+      "label": "Monto",
+      "available": "Saldo disponible: {balance}",
+      "continue": "Continuar"
+    },
+    "recipient": {
+      "title": "¿A quién se lo envías?",
+      "favorites": "Favoritos",
+      "others": "Otros contactos",
+      "empty": "Aún no tienes contactos guardados. Agrega uno nuevo.",
+      "new": "Nuevo contacto",
+      "continue": "Continuar"
+    },
+    "newContact": {
+      "title": "Nuevo contacto",
+      "name": "Nombre",
+      "namePlaceholder": "Ej. Sofía Martínez",
+      "phone": "Teléfono",
+      "phonePlaceholder": "55 1234 5678",
+      "save": "Guardar en favoritos",
+      "saving": "Guardando…",
+      "cancel": "Cancelar",
+      "errorTitle": "No pudimos guardar el contacto"
+    },
+    "summary": {
+      "title": "Revisa tu transferencia",
+      "to": "Para",
+      "amount": "Monto",
+      "fee": "Comisión",
+      "total": "Total",
+      "confirm": "Confirmar",
+      "confirming": "Enviando…",
+      "cancel": "Cancelar",
+      "errorTitle": "No pudimos completar la transferencia"
+    },
+    "errorTitle": "No pudimos preparar tu transferencia",
+    "errorDescription": "Revisa tu conexión e intenta de nuevo."
+  },
   "errors": {
     "validation": {
       "IDENTIFIER_REQUIRED": "Ingresa tu teléfono o correo electrónico.",
