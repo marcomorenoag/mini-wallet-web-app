@@ -1,12 +1,11 @@
 import { expect, test, type Page } from "@playwright/test";
 
+import { forceScenario } from "./support";
+
 const login = async (page: Page, identifier: string) => {
   await page.getByLabel("Teléfono o correo electrónico").fill(identifier);
   await page.getByRole("button", { name: "Continuar" }).click();
 };
-
-const forceScenario = (page: Page, scenario: string) =>
-  page.context().addCookies([{ name: "mock_scenario", value: scenario, url: page.url() }]);
 
 test.describe("login", () => {
   test.beforeEach(async ({ page }) => {
