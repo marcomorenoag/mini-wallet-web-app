@@ -142,11 +142,15 @@ app/         routes; route handlers + RSC call use cases through ports
 
 ## 7. API layer & docs
 
-- **Route Handlers** (`app/api/.../route.ts`) serve mock data. Required by the challenge ("API router con datos mockeados").
+- **Route Handlers** (`app/api/v1/.../route.ts`) serve mock data. Required by the challenge ("API router con datos mockeados").
+- **API versioning:** URL path versioning, starting at `/api/v1/*`.
+  - Request/response contracts (Zod schemas + DTO mappers) are versioned at the boundary (`contracts/v1`); domain and use cases stay unversioned.
+  - A breaking change adds `/api/v2/*` with its own contracts and mappers over the same use cases, so v1 keeps working until it is deprecated.
+  - Additive, non-breaking changes (new optional fields) stay in the current version.
 - Decide which mutations go through Server Actions and which through route handlers; showcasing both is valued.
 - Docs:
   - **Bruno**: plain-text `.bru` files in the repo, no account, runnable by reviewers, and the `bru` CLI can run them as API tests in CI.
-  - Stronger alternative: **OpenAPI generated from Zod** (`zod-openapi`), served with Scalar at `/api/docs`; Bruno can import it.
+  - Stronger alternative: **OpenAPI generated from Zod** (`zod-openapi`), served with Scalar at `/api/v1/docs`; Bruno can import it.
   - If time is short, do one: Bruno is quicker, OpenAPI tells the better single-source-of-truth story.
 
 ## 8. Testing

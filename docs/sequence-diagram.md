@@ -17,7 +17,7 @@ sequenceDiagram
         Note over U,R: 01 · Login
         U->>B: Enter phone or email
         B->>B: Validate format (shared Zod schema)
-        B->>N: POST login
+        B->>N: POST /api/v1/auth/login
         N->>D: login(identifier)
         D->>R: findUser(identifier)
         alt User found
@@ -49,13 +49,13 @@ sequenceDiagram
     rect rgb(255, 250, 230)
         Note over U,R: 03 · New transaction
         U->>B: Tap "New transfer"
-        B->>N: GET /api/contacts
+        B->>N: GET /api/v1/contacts
         N->>D: listContacts(userId)
         D->>R: Favorites
         N-->>B: Contacts
         U->>B: Enter amount · pick or add contact
         opt New contact
-            B->>N: POST /api/contacts
+            B->>N: POST /api/v1/contacts
             N->>D: saveContact(userId, contact)
             D->>R: Persist
         end
@@ -67,7 +67,7 @@ sequenceDiagram
     rect rgb(255, 238, 238)
         Note over U,R: 04 · Confirmation / Voucher
         U->>B: Confirm
-        B->>N: POST /api/transfers (Idempotency-Key)
+        B->>N: POST /api/v1/transfers (Idempotency-Key)
         N->>D: createTransfer(userId, draft, key)
         D->>D: Re-validate rules (server is source of truth)
         D->>R: Key already processed?
@@ -83,7 +83,7 @@ sequenceDiagram
                 N-->>B: NETWORK → error + "Retry" (same key)
             else Timeout
                 B->>B: Abort after threshold
-                B->>N: GET transfer status by key
+                B->>N: GET /api/v1/transfers?idempotencyKey=…
                 N-->>B: Resolved result or still pending
             else Unknown
                 N-->>B: UNKNOWN → generic fallback
