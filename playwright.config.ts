@@ -36,7 +36,15 @@ export default defineConfig({
     // Never reused, so a stale build is never tested.
     reuseExistingServer: false,
     timeout: 180_000,
-    // Scenario overrides are disabled in production builds by default; E2E tests rely on them.
-    env: { MOCK_SCENARIO_OVERRIDE: "enabled" },
+    env: {
+      // Scenario overrides are disabled in production builds by default; E2E tests rely on them.
+      MOCK_SCENARIO_OVERRIDE: "enabled",
+      // Faster mocks keep a normal confirmation well under the client timeout, while the client
+      // still gives up before the slow (TIMEOUT) approval completes, so recovery by idempotency
+      // key is exercised in seconds instead of the default 10 s / 15 s.
+      MOCK_LATENCY_MS: "50-150",
+      NEXT_PUBLIC_TRANSFER_TIMEOUT_MS: "2500",
+      MOCK_TIMEOUT_DELAY_MS: "5000",
+    },
   },
 });
