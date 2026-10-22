@@ -38,6 +38,7 @@
 - **Login submission:** the login form is submitted through a Server Action that calls the same use case as `POST /api/v1/auth/login`, so it works without JavaScript; the `next` destination is validated to prevent open redirects. Transfers use the API routes, so both mechanisms are showcased.
 - **Data access layer:** pages resolve the user through a request-memoized `getCurrentUser()`, which re-verifies the session; an invalid session is sent through `/session-expired`, which clears the cookie, since the proxy would otherwise bounce it between login and Home.
 - **Transfer draft:** the draft (amount, recipient, idempotency key) lives in memory in the flow provider and only the step is kept in the URL; a refresh restarts the flow, so a stale key is never reused for a different transfer.
+- **Confirmation outcomes:** the client waits up to 10 s (`NEXT_PUBLIC_TRANSFER_TIMEOUT_MS`) and then polls the status by idempotency key; each failure code maps to one safe next action, and a final outcome (insufficient funds) requires a new key, while retryable failures reuse the same one.
 - **E2E target:** E2E tests run against a production build on a dedicated port, because dev-mode HMR reloads made interactions flaky under the test runner.
 - **Rendering:** Home is server-rendered with streaming, the transfer flow is client-rendered, and the voucher is server-rendered by transaction id so it survives a refresh.
 

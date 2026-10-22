@@ -104,6 +104,15 @@ The transfer flow was implemented by the AI on the `feat/phase-08-new-transactio
 - A typed browser client for the v1 API that validates responses against the contracts, and a server loader for the balance and contacts with an error state.
 - MSW-based tests for the API client and the wizard, and E2E tests for the flow; a demo account reserved for flows that create transfers keeps E2E specs independent of each other.
 
+### Phase 9 — Confirmation and voucher
+
+The confirmation outcomes and the voucher were implemented by the AI on the `feat/phase-09-voucher` branch, stacked on the transfer branch:
+
+- A confirmation routine (pure and injectable) that aborts the request after a client timeout and then recovers the outcome by idempotency key instead of resending it; pending duplicates are polled the same way.
+- A failure screen per error code with the next safe action: change the amount (insufficient funds, with a new key), retry with the same key (network, unknown) or check the status again (timeout).
+- A server-rendered voucher by transfer id, scoped to its owner (404 otherwise), with a native share sheet or a copy fallback.
+- Unit tests for the confirmation routine, the failure paths of the wizard and the voucher, and E2E tests for all five scenarios.
+
 ### Accepted
 
 - Patched dependency versions and the Node 24 LTS pin.

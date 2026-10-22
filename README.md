@@ -80,11 +80,12 @@ Transfer confirmations are answered by a mock payment network that picks a weigh
 
 The mock behavior is configured through environment variables; see [`.env.example`](.env.example).
 
-| Variable                 | Default                      | Description                                      |
-| ------------------------ | ---------------------------- | ------------------------------------------------ |
-| `MOCK_LATENCY_MS`        | `250-700` (`0` under test)   | Simulated latency per mock call (fixed or range) |
-| `MOCK_TIMEOUT_DELAY_MS`  | `15000`                      | Delay of the TIMEOUT scenario                    |
-| `MOCK_SCENARIO_OVERRIDE` | `enabled` outside production | Whether a forced scenario is honored             |
+| Variable                          | Default                      | Description                                                                           |
+| --------------------------------- | ---------------------------- | ------------------------------------------------------------------------------------- |
+| `MOCK_LATENCY_MS`                 | `250-700` (`0` under test)   | Simulated latency per mock call (fixed or range)                                      |
+| `MOCK_TIMEOUT_DELAY_MS`           | `15000`                      | Delay of the TIMEOUT scenario                                                         |
+| `MOCK_SCENARIO_OVERRIDE`          | `enabled` outside production | Whether a forced scenario is honored                                                  |
+| `NEXT_PUBLIC_TRANSFER_TIMEOUT_MS` | `10000`                      | Client-side wait for a confirmation before its outcome is checked by key (build time) |
 
 ## API
 
