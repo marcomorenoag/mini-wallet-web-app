@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
-test("root page renders", async ({ page }) => {
+test("root redirects anonymous visitors to the login page", async ({ page }) => {
   await page.goto("/");
 
-  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  await expect(page).toHaveURL(/\/login$/);
 });

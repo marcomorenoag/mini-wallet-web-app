@@ -26,8 +26,10 @@ export default defineConfig({
   webServer: {
     // The production build is tested in CI; the dev server is reused locally for speed.
     command: isCI ? `npm run build && npm run start -- -p ${PORT}` : `npm run dev -- -p ${PORT}`,
-    url: baseURL,
+    url: `${baseURL}/api/health`,
     reuseExistingServer: !isCI,
     timeout: 120_000,
+    // Scenario overrides are disabled in production builds by default; E2E tests rely on them.
+    env: { MOCK_SCENARIO_OVERRIDE: "enabled" },
   },
 });
