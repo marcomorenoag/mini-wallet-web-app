@@ -38,6 +38,27 @@
     "errorTitle": "No pudimos iniciar sesión",
     "demoAccounts": "Cuentas de prueba: ana@example.com o 55 1234 5678 (con movimientos), bruno@example.com (sin movimientos)."
   },
+  "home": {
+    "metadataTitle": "Inicio",
+    "greeting": "Hola, {name}",
+    "logout": "Salir",
+    "balanceLabel": "Saldo disponible",
+    "newTransfer": "Nueva transferencia",
+    "movementsTitle": "Movimientos recientes",
+    "movement": {
+      "DEPOSIT": "{name}",
+      "TRANSFER_IN": "Recibido de {name}",
+      "TRANSFER_OUT": "Envío a {name}"
+    },
+    "movementKind": {
+      "credit": "Ingreso",
+      "debit": "Cargo"
+    },
+    "emptyTitle": "Aún no tienes movimientos",
+    "emptyDescription": "Cuando envíes o recibas dinero, aparecerá aquí.",
+    "errorTitle": "No pudimos cargar tu información",
+    "errorDescription": "Revisa tu conexión e intenta de nuevo."
+  },
   "errors": {
     "validation": {
       "IDENTIFIER_REQUIRED": "Ingresa tu teléfono o correo electrónico.",

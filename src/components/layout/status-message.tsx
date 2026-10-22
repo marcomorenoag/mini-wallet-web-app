@@ -8,11 +8,22 @@ interface StatusMessageProps {
   readonly description?: string;
   /** Call to action, e.g. a retry button or a link back home. */
   readonly action?: ReactNode;
+  /** 1 for full-page states; lower when rendered inside a page that already has an `h1`. */
+  readonly headingLevel?: 1 | 2 | 3;
   readonly className?: string;
 }
 
 /** Centered message shared by empty, error and not-found states. */
-export function StatusMessage({ icon, title, description, action, className }: StatusMessageProps) {
+export function StatusMessage({
+  icon,
+  title,
+  description,
+  action,
+  headingLevel = 1,
+  className,
+}: StatusMessageProps) {
+  const Heading = `h${headingLevel}` as const;
+
   return (
     <div
       className={cn(
@@ -25,7 +36,7 @@ export function StatusMessage({ icon, title, description, action, className }: S
           {icon}
         </div>
       ) : null}
-      <h1 className="font-heading text-lg font-semibold">{title}</h1>
+      <Heading className="font-heading text-lg font-semibold">{title}</Heading>
       {description ? <p className="max-w-xs text-sm text-muted-foreground">{description}</p> : null}
       {action ? <div className="mt-2">{action}</div> : null}
     </div>
