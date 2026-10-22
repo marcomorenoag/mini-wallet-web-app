@@ -198,7 +198,7 @@ app/         routes; route handlers + RSC call use cases through ports
 
 # Delivery plan
 
-Deadline: 2026-10-22 09:00. One commit (or a few) per phase.
+Deadline: 2026-10-23 09:00. One commit (or a few) per phase.
 
 | Tier       | Scope                                                                                                   |
 | ---------- | ------------------------------------------------------------------------------------------------------- |
