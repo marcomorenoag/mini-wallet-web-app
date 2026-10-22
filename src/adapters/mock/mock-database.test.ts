@@ -9,8 +9,8 @@ describe("mock database", () => {
 
   it("seeds valid fixtures (they are parsed through the domain schemas)", () => {
     const db = createMockDatabase();
-    expect(db.users.size).toBe(2);
-    expect(db.accounts.size).toBe(2);
+    expect(db.users.size).toBe(3);
+    expect(db.accounts.size).toBe(3);
     expect(db.movements.length).toBeGreaterThan(0);
     expect(db.contacts.length).toBeGreaterThan(0);
   });
