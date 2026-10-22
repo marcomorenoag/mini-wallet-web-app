@@ -65,3 +65,11 @@ export const createTransfer = (
     },
     TransferOutcomeDtoSchema,
   );
+
+/** Outcome of a confirmation by idempotency key, used to recover it after a client timeout. */
+export const getTransferStatus = (idempotencyKey: string) =>
+  request(
+    `/transfers?idempotencyKey=${encodeURIComponent(idempotencyKey)}`,
+    { method: "GET" },
+    TransferOutcomeDtoSchema,
+  );

@@ -41,10 +41,14 @@ export const POST = authenticatedHandler(
  * GET /api/v1/transfers?idempotencyKey=… — outcome of a confirmation, used to recover the result
  * after a client-side timeout. Always 200 when the key is known, with the outcome in the body.
  */
-export const GET = authenticatedHandler(async ({ request, user, useCases }) => {
-  const result = await useCases.getTransferStatus(
-    user.id,
-    request.nextUrl.searchParams.get("idempotencyKey"),
-  );
-  return result.ok ? json(toTransferOutcomeDto(result.value)) : problemFromAppError(result.error);
-});
+export const GET = authenticatedHandler(
+  async ({ request, user, useCases }) => {
+    const result = await useCases.getTransferStatus(
+      user.id,
+      request.nextUrl.searchParams.get("idempotencyKey"),
+    );
+    return result.ok ? json(toTransferOutcomeDto(result.value)) : problemFromAppError(result.error);
+  },
+  // Part of the confirmation flow: a forced scenario describes the payment, not this lookup.
+  { simulateFaults: false },
+);
