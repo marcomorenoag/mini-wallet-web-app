@@ -19,10 +19,14 @@ export default defineConfig({
       {
         extends: true,
         test: {
-          // Domain, application and adapters run in plain Node: no DOM is available, nor needed.
+          // Server-side code (domain to route handlers) runs in plain Node: no DOM is needed.
           name: "node",
           environment: "node",
-          include: ["src/{domain,application,adapters,server,test}/**/*.test.ts"],
+          include: [
+            "src/{domain,application,adapters,server,test,contracts}/**/*.test.ts",
+            "src/app/api/**/*.test.ts",
+            "src/proxy.test.ts",
+          ],
         },
       },
       {
@@ -32,7 +36,11 @@ export default defineConfig({
           environment: "jsdom",
           setupFiles: ["./vitest.setup.ts"],
           include: ["src/**/*.test.{ts,tsx}"],
-          exclude: ["src/{domain,application,adapters,server,test}/**"],
+          exclude: [
+            "src/{domain,application,adapters,server,test,contracts}/**",
+            "src/app/api/**",
+            "src/proxy.test.ts",
+          ],
         },
       },
     ],
