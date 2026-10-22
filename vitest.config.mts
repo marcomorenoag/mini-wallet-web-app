@@ -1,3 +1,5 @@
+import { fileURLToPath } from "node:url";
+
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vitest/config";
 
@@ -6,6 +8,10 @@ export default defineConfig({
   resolve: {
     // Resolves the "@/*" alias from tsconfig.json natively (Vite 8+).
     tsconfigPaths: true,
+    alias: {
+      // The marker throws outside React Server Components; server modules are tested in Node.
+      "server-only": fileURLToPath(new URL("./node_modules/server-only/empty.js", import.meta.url)),
+    },
   },
   test: {
     restoreMocks: true,
@@ -13,10 +19,10 @@ export default defineConfig({
       {
         extends: true,
         test: {
-          // Pure domain logic runs in plain Node: no DOM is available, nor needed.
-          name: "domain",
+          // Domain, application and adapters run in plain Node: no DOM is available, nor needed.
+          name: "node",
           environment: "node",
-          include: ["src/domain/**/*.test.ts"],
+          include: ["src/{domain,application,adapters,server,test}/**/*.test.ts"],
         },
       },
       {
@@ -26,7 +32,7 @@ export default defineConfig({
           environment: "jsdom",
           setupFiles: ["./vitest.setup.ts"],
           include: ["src/**/*.test.{ts,tsx}"],
-          exclude: ["src/domain/**"],
+          exclude: ["src/{domain,application,adapters,server,test}/**"],
         },
       },
     ],

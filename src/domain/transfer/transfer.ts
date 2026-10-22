@@ -52,6 +52,11 @@ export const TransferDraftSchema = z.object({
 
 export type TransferDraft = z.output<typeof TransferDraftSchema>;
 
+/**
+ * Result of a confirmation. `PENDING` is reported while a request with the same idempotency key
+ * is still being processed (e.g. when the status is queried after a client-side timeout).
+ */
 export type TransferOutcome =
   | { readonly status: "COMPLETED"; readonly transfer: Transfer }
-  | { readonly status: "FAILED"; readonly code: TransferFailureCode };
+  | { readonly status: "FAILED"; readonly code: TransferFailureCode }
+  | { readonly status: "PENDING" };
