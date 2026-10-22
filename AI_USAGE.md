@@ -95,6 +95,15 @@ The Home module was implemented by the AI on the `feat/phase-07-home` branch, st
 - A logout Server Action that works without JavaScript.
 - Unit tests for the data access layer, logout, the session-expired route and the Home components, and E2E tests for data, empty and error states, logout, stale sessions and theme switching.
 
+### Phase 8 — New transaction
+
+The transfer flow was implemented by the AI on the `feat/phase-08-new-transaction` branch, stacked on the Home branch:
+
+- A scoped `TransferFlowProvider` (Context + `useReducer`) holding the draft and its idempotency key, with the wizard step kept in `?step=` and steps without their prerequisites sent back to the first gap.
+- Amount, recipient and summary steps: business rules checked on the client with the shared domain functions, favorite contacts, an inline form that saves a new favorite through the API, a masked phone on the summary, and focus moved to each step title.
+- A typed browser client for the v1 API that validates responses against the contracts, and a server loader for the balance and contacts with an error state.
+- MSW-based tests for the API client and the wizard, and E2E tests for the flow; a demo account reserved for flows that create transfers keeps E2E specs independent of each other.
+
 ### Accepted
 
 - Patched dependency versions and the Node 24 LTS pin.
