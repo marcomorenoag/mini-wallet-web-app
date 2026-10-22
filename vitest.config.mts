@@ -23,7 +23,7 @@ export default defineConfig({
           name: "node",
           environment: "node",
           include: [
-            "src/{domain,application,adapters,server,test,contracts}/**/*.test.ts",
+            "src/{domain,application,adapters,server,test,contracts,i18n}/**/*.test.ts",
             "src/app/api/**/*.test.ts",
             "src/proxy.test.ts",
           ],
@@ -37,7 +37,7 @@ export default defineConfig({
           setupFiles: ["./vitest.setup.ts"],
           include: ["src/**/*.test.{ts,tsx}"],
           exclude: [
-            "src/{domain,application,adapters,server,test,contracts}/**",
+            "src/{domain,application,adapters,server,test,contracts,i18n}/**",
             "src/app/api/**",
             "src/proxy.test.ts",
           ],

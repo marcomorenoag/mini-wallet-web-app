@@ -1,0 +1,52 @@
+{
+  "metadata": {
+    "title": "Mini Wallet",
+    "description": "Consulta tu saldo, revisa tus movimientos y envía dinero a tus contactos."
+  },
+  "common": {
+    "appName": "Mini Wallet",
+    "skipToContent": "Saltar al contenido",
+    "loading": "Cargando…",
+    "retry": "Reintentar",
+    "continue": "Continuar",
+    "cancel": "Cancelar",
+    "backToHome": "Volver al inicio"
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "description": "La página que buscas no existe o ya no está disponible."
+  },
+  "errorPage": {
+    "title": "Algo salió mal",
+    "description": "Ocurrió un error inesperado. Intenta de nuevo en unos momentos."
+  },
+  "errors": {
+    "validation": {
+      "IDENTIFIER_REQUIRED": "Ingresa tu teléfono o correo electrónico.",
+      "IDENTIFIER_INVALID": "Ingresa un teléfono o correo válido.",
+      "IDENTIFIER_NOT_FOUND": "No encontramos una cuenta con esos datos.",
+      "AMOUNT_REQUIRED": "Ingresa un monto.",
+      "AMOUNT_INVALID": "Ingresa un monto válido.",
+      "AMOUNT_NOT_POSITIVE": "El monto debe ser mayor a cero.",
+      "INSUFFICIENT_FUNDS": "El monto supera tu saldo.",
+      "RECIPIENT_REQUIRED": "Elige a quién enviarle dinero.",
+      "RECIPIENT_NOT_FOUND": "No encontramos ese contacto.",
+      "CONTACT_NAME_REQUIRED": "Ingresa un nombre.",
+      "CONTACT_NAME_TOO_LONG": "El nombre es demasiado largo.",
+      "PHONE_REQUIRED": "Ingresa un teléfono.",
+      "PHONE_INVALID": "Ingresa un teléfono de 10 dígitos.",
+      "CONTACT_ALREADY_EXISTS": "Ya tienes un contacto con ese teléfono.",
+      "INVALID": "Revisa este dato."
+    },
+    "problem": {
+      "BAD_REQUEST": "No pudimos procesar la solicitud.",
+      "VALIDATION": "Revisa los datos e intenta de nuevo.",
+      "UNAUTHENTICATED": "Tu sesión expiró. Inicia sesión de nuevo.",
+      "NOT_FOUND": "No encontramos lo que buscas.",
+      "INSUFFICIENT_FUNDS": "No tienes fondos suficientes para esta operación.",
+      "NETWORK": "Hubo un problema de conexión. Intenta de nuevo.",
+      "TIMEOUT": "La operación tardó demasiado en responder.",
+      "UNKNOWN": "Ocurrió un error inesperado."
+    }
+  }
+}
