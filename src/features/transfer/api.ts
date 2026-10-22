@@ -31,7 +31,7 @@ const request = async <S extends z.ZodType>(
     });
   } catch (error) {
     // An abort is the caller's decision (e.g. its own timeout); anything else is connectivity.
-    if (error instanceof DOMException && error.name === "AbortError") throw error;
+    if (init.signal?.aborted) throw error;
     return failure("NETWORK");
   }
 
