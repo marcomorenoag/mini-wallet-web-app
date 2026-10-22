@@ -60,6 +60,30 @@ const fillAmountAndContinue = async (user: ReturnType<typeof userEvent.setup>, a
   await user.click(continueButton());
 };
 
+const goToSummary = async (user: ReturnType<typeof userEvent.setup>) => {
+  await fillAmountAndContinue(user, "250");
+  await user.click(screen.getByRole("radio", { name: /Luis Pérez/ }));
+  await user.click(continueButton());
+};
+
+const problemResponse = (code: string, status: number) =>
+  HttpResponse.json({ type: "about:blank", title: code, status, code }, { status });
+
+const completedResponse = (idempotencyKey: string | null) =>
+  HttpResponse.json(
+    {
+      status: "COMPLETED",
+      transfer: {
+        id: "trf_1",
+        idempotencyKey,
+        recipient: { contactId: "cnt_luis", name: "Luis Pérez", phone: "+525511112222" },
+        amount: { amount: 25_000, currency: "MXN" },
+        createdAt: "2026-10-22T16:42:00.000Z",
+      },
+    },
+    { status: 201 },
+  );
+
 beforeEach(() => {
   nav.go("/transfer");
 });
@@ -171,5 +195,69 @@ describe("TransferWizard", () => {
 
     await waitFor(() => expect(nav.url).toBe("/transfer?step=amount"));
     expect(screen.getByRole("heading", { name: "¿Cuánto quieres enviar?" })).toBeInTheDocument();
+  });
+
+  it("retries a network failure with the same idempotency key", async () => {
+    const user = userEvent.setup();
+    const keys: (string | null)[] = [];
+    server.use(
+      http.post(apiPath("/transfers"), ({ request }) => {
+        keys.push(request.headers.get("Idempotency-Key"));
+        return keys.length === 1 ? problemResponse("NETWORK", 503) : completedResponse(keys[1]!);
+      }),
+    );
+    renderWizard();
+    await goToSummary(user);
+
+    await user.click(screen.getByRole("button", { name: "Confirmar" }));
+    const failure = await screen.findByRole("alert");
+    expect(failure).toHaveTextContent("No pudimos completar la transferencia");
+    expect(failure).toHaveTextContent("No se hizo ningún cargo");
+
+    await user.click(screen.getByRole("button", { name: "Reintentar" }));
+    await waitFor(() => expect(nav.url).toBe("/voucher/trf_1"));
+    expect(keys[0]).toBe(keys[1]);
+  });
+
+  it("sends an insufficient-funds failure back to the amount with a new key", async () => {
+    const user = userEvent.setup();
+    const keys: (string | null)[] = [];
+    server.use(
+      http.post(apiPath("/transfers"), ({ request }) => {
+        keys.push(request.headers.get("Idempotency-Key"));
+        return problemResponse("INSUFFICIENT_FUNDS", 422);
+      }),
+    );
+    renderWizard();
+    await goToSummary(user);
+
+    await user.click(screen.getByRole("button", { name: "Confirmar" }));
+    expect(await screen.findByText(/Tu saldo no alcanza/)).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Reintentar" })).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Cambiar monto" }));
+    expect(nav.url).toBe("/transfer?step=amount");
+    expect(screen.getByLabelText("Monto")).toHaveValue("250");
+
+    await user.click(continueButton());
+    await user.click(continueButton());
+    await user.click(screen.getByRole("button", { name: "Confirmar" }));
+    await screen.findByText(/Tu saldo no alcanza/);
+    expect(keys).toHaveLength(2);
+    expect(keys[0]).not.toBe(keys[1]);
+  });
+
+  it.each([
+    ["UNKNOWN", 500, "Reintentar"],
+    ["TIMEOUT", 504, "Consultar estado"],
+  ])("offers the next safe action for %s", async (code, status, action) => {
+    const user = userEvent.setup();
+    server.use(http.post(apiPath("/transfers"), () => problemResponse(code, status)));
+    renderWizard();
+    await goToSummary(user);
+
+    await user.click(screen.getByRole("button", { name: "Confirmar" }));
+    expect(await screen.findByRole("button", { name: action })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Volver al inicio" })).toHaveAttribute("href", "/home");
   });
 });
