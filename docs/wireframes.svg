@@ -1,0 +1,201 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="10 -30 2104 1220" width="2104" height="1220" font-family="Helvetica, Arial, sans-serif">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/></marker></defs>
+<rect x="10" y="-30" width="2103.6" height="1220" fill="#ffffff"/>
+
+<text x="40" y="28.0" font-size="28" fill="#1e1e1e" text-anchor="start">Mini Wallet — Wireframes (low-fi, es-MX)</text>
+
+<text x="40" y="55.0" font-size="15" fill="#495057" text-anchor="start">Mobile-first views and navigation · annotations in English, UI copy in Spanish</text>
+
+<text x="40" y="126.0" font-size="20" fill="#1e1e1e" text-anchor="start">01 · Login</text>
+<rect x="40" y="140" width="320" height="640" rx="10" fill="#ffffff" stroke="#1e1e1e" stroke-width="3"/>
+<ellipse cx="200.0" cy="230.0" rx="30.0" ry="30.0" fill="#e5dbff" stroke="#6741d9" stroke-width="2"/>
+
+<text x="200.0" y="236.0" font-size="16" fill="#6741d9" text-anchor="middle">MW</text>
+
+<text x="60" y="314.0" font-size="24" fill="#1e1e1e" text-anchor="start">Inicia sesión</text>
+
+<text x="60" y="354.0" font-size="14" fill="#495057" text-anchor="start">Teléfono o correo electrónico</text>
+<rect x="60" y="362" width="280" height="48" rx="10" fill="#f1f3f5" stroke="#495057" stroke-width="2"/>
+
+<text x="70" y="391.25" font-size="14" fill="#495057" text-anchor="start">55 1234 5678 / tu@correo.com</text>
+
+<text x="60" y="431.0" font-size="13" fill="#e03131" text-anchor="start">⚠ Ingresa un teléfono o correo válido</text>
+<rect x="60" y="460" width="280" height="48" rx="10" fill="#d0ebff" stroke="#1971c2" stroke-width="2"/>
+
+<text x="200.0" y="490.0" font-size="16" fill="#1971c2" text-anchor="middle">Continuar</text>
+<rect x="60" y="540" width="280" height="60" rx="10" fill="#ffe3e3" stroke="#e03131" stroke-width="2"/>
+
+<text x="200.0" y="566.75" font-size="13" fill="#e03131" text-anchor="middle">No pudimos iniciar sesión.</text>
+<text x="200.0" y="583.0" font-size="13" fill="#e03131" text-anchor="middle">Intenta de nuevo.</text>
+
+<text x="40" y="810.0" font-size="14" fill="#495057" text-anchor="start">States: idle · validating · loading (button</text>
+<text x="40" y="827.5" font-size="14" fill="#495057" text-anchor="start">spinner) · simulated error banner</text>
+<text x="40" y="845.0" font-size="14" fill="#495057" text-anchor="start">Session: httpOnly cookie → redirect /home</text>
+
+<text x="500" y="126.0" font-size="20" fill="#1e1e1e" text-anchor="start">02 · Home</text>
+<rect x="500" y="140" width="320" height="640" rx="10" fill="#ffffff" stroke="#1e1e1e" stroke-width="3"/>
+<ellipse cx="540.0" cy="180.0" rx="20.0" ry="20.0" fill="#e5dbff" stroke="#6741d9" stroke-width="2"/>
+
+<text x="540.0" y="186.0" font-size="16" fill="#6741d9" text-anchor="middle">A</text>
+
+<text x="572" y="190.0" font-size="20" fill="#1e1e1e" text-anchor="start">Hola, Ana</text>
+
+<text x="760" y="186.0" font-size="14" fill="#495057" text-anchor="start">Salir</text>
+<rect x="520" y="220" width="280" height="110" rx="10" fill="#d0ebff" stroke="#1971c2" stroke-width="2"/>
+
+<text x="660.0" y="259.25" font-size="18" fill="#1971c2" text-anchor="middle">Saldo disponible</text>
+<text x="660.0" y="281.75" font-size="18" fill="#1971c2" text-anchor="middle"></text>
+<text x="660.0" y="304.25" font-size="18" fill="#1971c2" text-anchor="middle">$12,500.00 MXN</text>
+<rect x="520" y="350" width="280" height="48" rx="10" fill="#d3f9d8" stroke="#2f9e44" stroke-width="2"/>
+
+<text x="660.0" y="380.0" font-size="16" fill="#2f9e44" text-anchor="middle">＋ Nueva transferencia</text>
+
+<text x="520" y="441.0" font-size="16" fill="#1e1e1e" text-anchor="start">Movimientos recientes</text>
+<rect x="520" y="455" width="280" height="56" rx="10" fill="#f1f3f5" stroke="#495057" stroke-width="1"/>
+
+<text x="532" y="478.0" font-size="14" fill="#1e1e1e" text-anchor="start">Envío a Luis Pérez</text>
+
+<text x="532" y="498.0" font-size="12" fill="#495057" text-anchor="start">21 oct · 10:42</text>
+
+<text x="710" y="487.0" font-size="14" fill="#e03131" text-anchor="start">−$250.00</text>
+<rect x="520" y="521" width="280" height="56" rx="10" fill="#f1f3f5" stroke="#495057" stroke-width="1"/>
+
+<text x="532" y="544.0" font-size="14" fill="#1e1e1e" text-anchor="start">Depósito de Marta</text>
+
+<text x="532" y="564.0" font-size="12" fill="#495057" text-anchor="start">21 oct · 10:42</text>
+
+<text x="710" y="553.0" font-size="14" fill="#2f9e44" text-anchor="start">+$1,200.00</text>
+<rect x="520" y="587" width="280" height="56" rx="10" fill="#f1f3f5" stroke="#495057" stroke-width="1"/>
+
+<text x="532" y="610.0" font-size="14" fill="#1e1e1e" text-anchor="start">Envío a Carlos</text>
+
+<text x="532" y="630.0" font-size="12" fill="#495057" text-anchor="start">21 oct · 10:42</text>
+
+<text x="710" y="619.0" font-size="14" fill="#e03131" text-anchor="start">−$80.50</text>
+<rect x="520" y="653" width="280" height="56" rx="10" fill="#f1f3f5" stroke="#495057" stroke-width="1"/>
+
+<text x="532" y="676.0" font-size="14" fill="#1e1e1e" text-anchor="start">Depósito nómina</text>
+
+<text x="532" y="696.0" font-size="12" fill="#495057" text-anchor="start">21 oct · 10:42</text>
+
+<text x="710" y="685.0" font-size="14" fill="#2f9e44" text-anchor="start">+$9,000.00</text>
+
+<text x="500" y="810.0" font-size="14" fill="#495057" text-anchor="start">States: skeleton loading · empty (&quot;Aún no</text>
+<text x="500" y="827.5" font-size="14" fill="#495057" text-anchor="start">tienes movimientos&quot;) · error + Reintentar</text>
+<text x="500" y="845.0" font-size="14" fill="#495057" text-anchor="start">Rendering: RSC/SSR + streaming</text>
+
+<text x="960" y="126.0" font-size="20" fill="#1e1e1e" text-anchor="start">03 · Nueva transferencia</text>
+<rect x="960" y="140" width="320" height="640" rx="10" fill="#ffffff" stroke="#1e1e1e" stroke-width="3"/>
+
+<text x="980" y="184.0" font-size="18" fill="#1e1e1e" text-anchor="start">←  Nueva transferencia</text>
+
+<text x="980" y="224.0" font-size="14" fill="#495057" text-anchor="start">Monto</text>
+<rect x="980" y="232" width="280" height="56" rx="10" fill="#f1f3f5" stroke="#495057" stroke-width="2"/>
+
+<text x="990" y="268.25" font-size="22" fill="#495057" text-anchor="start">$ 250.00</text>
+
+<text x="980" y="306.0" font-size="12" fill="#495057" text-anchor="start">Saldo disponible: $12,500.00</text>
+
+<text x="980" y="340.0" font-size="14" fill="#495057" text-anchor="start">Favoritos</text>
+<ellipse cx="1012.0" cy="374.0" rx="24.0" ry="24.0" fill="#d0ebff" stroke="#1971c2" stroke-width="2"/>
+
+<text x="1012.0" y="380.0" font-size="16" fill="#1971c2" text-anchor="middle">L</text>
+
+<text x="988" y="416.0" font-size="12" fill="#1e1e1e" text-anchor="start">Luis</text>
+<ellipse cx="1084.0" cy="374.0" rx="24.0" ry="24.0" fill="#f1f3f5" stroke="#495057" stroke-width="2"/>
+
+<text x="1084.0" y="380.0" font-size="16" fill="#495057" text-anchor="middle">M</text>
+
+<text x="1060" y="416.0" font-size="12" fill="#1e1e1e" text-anchor="start">Marta</text>
+<ellipse cx="1156.0" cy="374.0" rx="24.0" ry="24.0" fill="#f1f3f5" stroke="#495057" stroke-width="2"/>
+
+<text x="1156.0" y="380.0" font-size="16" fill="#495057" text-anchor="middle">C</text>
+
+<text x="1132" y="416.0" font-size="12" fill="#1e1e1e" text-anchor="start">Carlos</text>
+<ellipse cx="1220.0" cy="374.0" rx="24.0" ry="24.0" fill="#ffffff" stroke="#1e1e1e" stroke-width="2" stroke-dasharray="8 6"/>
+
+<text x="1220.0" y="380.75" font-size="18" fill="#1e1e1e" text-anchor="middle">＋</text>
+
+<text x="1192" y="416.0" font-size="12" fill="#1e1e1e" text-anchor="start">Nuevo</text>
+<rect x="980" y="440" width="280" height="150" rx="10" fill="#fff3bf" stroke="#e67700" stroke-width="2"/>
+
+<text x="990" y="464.0" font-size="14" fill="#e67700" text-anchor="start">Resumen</text>
+<text x="990" y="481.5" font-size="14" fill="#e67700" text-anchor="start"></text>
+<text x="990" y="499.0" font-size="14" fill="#e67700" text-anchor="start">Para: Luis Pérez · 55 •••• 1234</text>
+<text x="990" y="516.5" font-size="14" fill="#e67700" text-anchor="start">Monto: $250.00 MXN</text>
+<text x="990" y="534.0" font-size="14" fill="#e67700" text-anchor="start">Comisión: $0.00</text>
+
+<text x="980" y="615.0" font-size="13" fill="#e03131" text-anchor="start">⚠ El monto supera tu saldo</text>
+<rect x="980" y="640" width="280" height="48" rx="10" fill="#d0ebff" stroke="#1971c2" stroke-width="2"/>
+
+<text x="1120.0" y="670.0" font-size="16" fill="#1971c2" text-anchor="middle">Confirmar</text>
+<rect x="980" y="700" width="280" height="44" rx="10" fill="#ffffff" stroke="#1e1e1e" stroke-width="2"/>
+
+<text x="1120.0" y="728.0" font-size="16" fill="#1e1e1e" text-anchor="middle">Cancelar</text>
+
+<text x="960" y="810.0" font-size="14" fill="#495057" text-anchor="start">Steps: amount → recipient → summary (?step=)</text>
+<text x="960" y="827.5" font-size="14" fill="#495057" text-anchor="start">Rules: amount &gt; 0 · ≤ balance · recipient</text>
+<text x="960" y="845.0" font-size="14" fill="#495057" text-anchor="start">New contact: inline form → saved (mock)</text>
+
+<text x="1420" y="126.0" font-size="20" fill="#1e1e1e" text-anchor="start">04 · Comprobante</text>
+<rect x="1420" y="140" width="320" height="640" rx="10" fill="#ffffff" stroke="#1e1e1e" stroke-width="3"/>
+<ellipse cx="1580.0" cy="225.0" rx="35.0" ry="35.0" fill="#d3f9d8" stroke="#2f9e44" stroke-width="2"/>
+
+<text x="1580.0" y="235.5" font-size="28" fill="#2f9e44" text-anchor="middle">✓</text>
+
+<text x="1462" y="300.0" font-size="20" fill="#1e1e1e" text-anchor="start">¡Transferencia exitosa!</text>
+<rect x="1440" y="330" width="280" height="190" rx="10" fill="#f1f3f5" stroke="#495057" stroke-width="2"/>
+
+<text x="1450" y="354.0" font-size="14" fill="#495057" text-anchor="start">Folio: TX-8F2K19</text>
+<text x="1450" y="371.5" font-size="14" fill="#495057" text-anchor="start"></text>
+<text x="1450" y="389.0" font-size="14" fill="#495057" text-anchor="start">Para: Luis Pérez</text>
+<text x="1450" y="406.5" font-size="14" fill="#495057" text-anchor="start">Monto: $250.00 MXN</text>
+<text x="1450" y="424.0" font-size="14" fill="#495057" text-anchor="start">Fecha: 22 oct 2026 · 10:42</text>
+<text x="1450" y="441.5" font-size="14" fill="#495057" text-anchor="start">Estado: Completada</text>
+<rect x="1440" y="550" width="280" height="48" rx="10" fill="#d0ebff" stroke="#1971c2" stroke-width="2"/>
+
+<text x="1580.0" y="580.0" font-size="16" fill="#1971c2" text-anchor="middle">Volver al inicio</text>
+<rect x="1440" y="610" width="280" height="48" rx="10" fill="#ffffff" stroke="#1e1e1e" stroke-width="2"/>
+
+<text x="1580.0" y="640.0" font-size="16" fill="#1e1e1e" text-anchor="middle">Compartir comprobante</text>
+<rect x="1420" y="860" width="320" height="300" rx="10" fill="#ffffff" stroke="#1e1e1e" stroke-width="3"/>
+
+<text x="1420" y="844.0" font-size="18" fill="#1e1e1e" text-anchor="start">04b · Error state</text>
+<ellipse cx="1580.0" cy="910.0" rx="30.0" ry="30.0" fill="#ffe3e3" stroke="#e03131" stroke-width="2"/>
+
+<text x="1580.0" y="919.75" font-size="26" fill="#e03131" text-anchor="middle">!</text>
+
+<text x="1440" y="973.0" font-size="18" fill="#1e1e1e" text-anchor="start">No pudimos completar</text>
+<text x="1440" y="995.5" font-size="18" fill="#1e1e1e" text-anchor="start">la transferencia</text>
+<rect x="1440" y="1010" width="280" height="70" rx="10" fill="#ffe3e3" stroke="#e03131" stroke-width="2"/>
+
+<text x="1450" y="1032.0" font-size="12" fill="#e03131" text-anchor="start">Reason by error code:</text>
+<text x="1450" y="1047.0" font-size="12" fill="#e03131" text-anchor="start">fondos insuficientes · red · tiempo</text>
+<text x="1450" y="1062.0" font-size="12" fill="#e03131" text-anchor="start">de espera · error desconocido</text>
+<rect x="1440" y="1092" width="280" height="44" rx="10" fill="#d0ebff" stroke="#1971c2" stroke-width="2"/>
+
+<text x="1580.0" y="1120.0" font-size="16" fill="#1971c2" text-anchor="middle">Reintentar</text>
+
+<text x="1756" y="893.0" font-size="13" fill="#495057" text-anchor="start">NETWORK → retry (same idempotency key)</text>
+<text x="1756" y="909.25" font-size="13" fill="#495057" text-anchor="start">INSUFFICIENT_FUNDS → descriptive, no retry</text>
+<text x="1756" y="925.5" font-size="13" fill="#495057" text-anchor="start">TIMEOUT → check status by key</text>
+<text x="1756" y="941.75" font-size="13" fill="#495057" text-anchor="start">UNKNOWN → generic fallback</text>
+<polyline points="360,460.0 500,460.0" fill="none" stroke="#1e1e1e" stroke-width="2" marker-end="url(#ah)"/>
+<rect x="392.4" y="438.5" width="75.2" height="17.5" fill="#ffffff"/>
+<text x="430.0" y="452.5" font-size="14" fill="#1e1e1e" text-anchor="middle">login OK</text>
+<polyline points="820,460.0 960,460.0" fill="none" stroke="#1e1e1e" stroke-width="2" marker-end="url(#ah)"/>
+<rect x="806.2" y="438.5" width="167.6" height="17.5" fill="#ffffff"/>
+<text x="890.0" y="452.5" font-size="14" fill="#1e1e1e" text-anchor="middle">Nueva transferencia</text>
+<polyline points="1280,460.0 1420,460.0" fill="none" stroke="#1e1e1e" stroke-width="2" marker-end="url(#ah)"/>
+<rect x="1308.2" y="438.5" width="83.6" height="17.5" fill="#ffffff"/>
+<text x="1350.0" y="452.5" font-size="14" fill="#1e1e1e" text-anchor="middle">Confirmar</text>
+<polyline points="1580.0,780 1580.0,860" fill="none" stroke="#1e1e1e" stroke-width="2" marker-end="url(#ah)"/>
+<rect x="1555.0" y="798.5" width="50.0" height="17.5" fill="#ffffff"/>
+<text x="1580.0" y="812.5" font-size="14" fill="#1e1e1e" text-anchor="middle">falla</text>
+<polyline points="1700,140 1700,80 660.0,80 660.0,140" fill="none" stroke="#1e1e1e" stroke-width="2" marker-end="url(#ah)"/>
+<rect x="1108.8" y="58.5" width="142.4" height="17.5" fill="#ffffff"/>
+<text x="1180.0" y="72.5" font-size="14" fill="#1e1e1e" text-anchor="middle">Volver al inicio</text>
+<polyline points="1420,980 1350,980 1350,740 1280,740" fill="none" stroke="#1e1e1e" stroke-width="2" marker-end="url(#ah)"/>
+<rect x="1304.0" y="838.5" width="92.0" height="17.5" fill="#ffffff"/>
+<text x="1350.0" y="852.5" font-size="14" fill="#1e1e1e" text-anchor="middle">Reintentar</text>
+</svg>

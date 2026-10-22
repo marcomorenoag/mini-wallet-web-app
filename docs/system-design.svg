@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="10 -10 1420 880" width="1420" height="880" font-family="Helvetica, Arial, sans-serif">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/></marker></defs>
+<rect x="10" y="-10" width="1420" height="880" fill="#ffffff"/>
+
+<text x="40" y="52.0" font-size="32" fill="#1e1e1e" text-anchor="start">Mini Wallet — System Design</text>
+
+<text x="40" y="82.0" font-size="16" fill="#495057" text-anchor="start">Hexagonal-lite on Next.js 16 · current mock adapters (solid) vs. production target (dashed)</text>
+<rect x="40" y="140" width="280" height="220" rx="10" fill="#d0ebff" stroke="#1971c2" stroke-width="2"/>
+
+<text x="50" y="165.0" font-size="15" fill="#1971c2" text-anchor="start">Client · Browser (mobile-first)</text>
+<text x="50" y="183.75" font-size="15" fill="#1971c2" text-anchor="start"></text>
+<text x="50" y="202.5" font-size="15" fill="#1971c2" text-anchor="start">• Login · Home · Transfer · Voucher</text>
+<text x="50" y="221.25" font-size="15" fill="#1971c2" text-anchor="start">• TransferFlowProvider</text>
+<text x="50" y="240.0" font-size="15" fill="#1971c2" text-anchor="start">  (Context + useReducer)</text>
+<text x="50" y="258.75" font-size="15" fill="#1971c2" text-anchor="start">• Zod schemas (UX feedback)</text>
+<text x="50" y="277.5" font-size="15" fill="#1971c2" text-anchor="start">• next-intl · es-MX / MXN</text>
+<text x="50" y="296.25" font-size="15" fill="#1971c2" text-anchor="start">• Idempotency key per draft</text>
+<rect x="40" y="420" width="280" height="90" rx="10" fill="#f1f3f5" stroke="#495057" stroke-width="2" stroke-dasharray="8 6"/>
+
+<text x="180.0" y="461.25" font-size="15" fill="#495057" text-anchor="middle">CDN / Edge</text>
+<text x="180.0" y="480.0" font-size="15" fill="#495057" text-anchor="middle">static assets · TLS</text>
+<rect x="400" y="120" width="560" height="720" rx="10" fill="none" stroke="#1e1e1e" stroke-width="1"/>
+
+<text x="420" y="152.0" font-size="20" fill="#1e1e1e" text-anchor="start">Next.js 16 server (Node 24)</text>
+<rect x="420" y="180" width="520" height="60" rx="10" fill="#e5dbff" stroke="#6741d9" stroke-width="2"/>
+
+<text x="680.0" y="215.625" font-size="15" fill="#6741d9" text-anchor="middle">proxy.ts · optimistic session guard (httpOnly cookie)</text>
+<rect x="420" y="270" width="160" height="90" rx="10" fill="#e5dbff" stroke="#6741d9" stroke-width="2"/>
+
+<text x="500.0" y="311.25" font-size="15" fill="#6741d9" text-anchor="middle">RSC pages</text>
+<text x="500.0" y="330.0" font-size="15" fill="#6741d9" text-anchor="middle">SSR + streaming</text>
+<rect x="600" y="270" width="160" height="90" rx="10" fill="#e5dbff" stroke="#6741d9" stroke-width="2"/>
+
+<text x="680.0" y="311.25" font-size="15" fill="#6741d9" text-anchor="middle">Route Handlers</text>
+<text x="680.0" y="330.0" font-size="15" fill="#6741d9" text-anchor="middle">/api/*</text>
+<rect x="780" y="270" width="160" height="90" rx="10" fill="#e5dbff" stroke="#6741d9" stroke-width="2"/>
+
+<text x="860.0" y="311.25" font-size="15" fill="#6741d9" text-anchor="middle">Server</text>
+<text x="860.0" y="330.0" font-size="15" fill="#6741d9" text-anchor="middle">Actions</text>
+<rect x="420" y="400" width="520" height="110" rx="10" fill="#d3f9d8" stroke="#2f9e44" stroke-width="2"/>
+
+<text x="680.0" y="434.0" font-size="14" fill="#2f9e44" text-anchor="middle">Use cases (application)</text>
+<text x="680.0" y="451.5" font-size="14" fill="#2f9e44" text-anchor="middle">login · getAccount · listMovements · listContacts</text>
+<text x="680.0" y="469.0" font-size="14" fill="#2f9e44" text-anchor="middle">saveContact · createTransfer(key) · getTransferStatus(key)</text>
+<text x="680.0" y="486.5" font-size="14" fill="#2f9e44" text-anchor="middle">ownership check: every query is scoped to session userId</text>
+<rect x="420" y="540" width="520" height="100" rx="10" fill="#d3f9d8" stroke="#2f9e44" stroke-width="2"/>
+
+<text x="680.0" y="569.0" font-size="14" fill="#2f9e44" text-anchor="middle">Domain (pure TS — no React / Next)</text>
+<text x="680.0" y="586.5" font-size="14" fill="#2f9e44" text-anchor="middle">Money (cents + MXN) · Zod schemas · transfer rules</text>
+<text x="680.0" y="604.0" font-size="14" fill="#2f9e44" text-anchor="middle">amount &gt; 0 · amount ≤ balance · recipient required</text>
+<text x="680.0" y="621.5" font-size="14" fill="#2f9e44" text-anchor="middle">typed error codes (INSUFFICIENT_FUNDS, TIMEOUT, …)</text>
+<rect x="420" y="670" width="520" height="140" rx="10" fill="#fff3bf" stroke="#e67700" stroke-width="2"/>
+
+<text x="680.0" y="708.125" font-size="15" fill="#e67700" text-anchor="middle">Ports (interfaces)</text>
+<text x="680.0" y="726.875" font-size="15" fill="#e67700" text-anchor="middle"></text>
+<text x="680.0" y="745.625" font-size="15" fill="#e67700" text-anchor="middle">SessionPort · AccountRepository</text>
+<text x="680.0" y="764.375" font-size="15" fill="#e67700" text-anchor="middle">TransactionRepository · ContactRepository</text>
+<text x="680.0" y="783.125" font-size="15" fill="#e67700" text-anchor="middle">IdempotencyStore</text>
+<rect x="1040" y="400" width="360" height="150" rx="10" fill="#fff3bf" stroke="#e67700" stroke-width="2"/>
+
+<text x="1050" y="425.0" font-size="15" fill="#e67700" text-anchor="start">Adapters — current (mock)</text>
+<text x="1050" y="443.75" font-size="15" fill="#e67700" text-anchor="start"></text>
+<text x="1050" y="462.5" font-size="15" fill="#e67700" text-anchor="start">• In-memory repos (globalThis)</text>
+<text x="1050" y="481.25" font-size="15" fill="#e67700" text-anchor="start">• Typed TS fixtures (satisfies)</text>
+<text x="1050" y="500.0" font-size="15" fill="#e67700" text-anchor="start">• Simulated latency</text>
+<text x="1050" y="518.75" font-size="15" fill="#e67700" text-anchor="start">• x-mock-scenario override (non-prod)</text>
+<rect x="1040" y="620" width="360" height="200" rx="10" fill="#f1f3f5" stroke="#495057" stroke-width="2" stroke-dasharray="8 6"/>
+
+<text x="1050" y="645.0" font-size="15" fill="#495057" text-anchor="start">Adapters — production target</text>
+<text x="1050" y="663.75" font-size="15" fill="#495057" text-anchor="start"></text>
+<text x="1050" y="682.5" font-size="15" fill="#495057" text-anchor="start">• PostgreSQL: ACID ledger</text>
+<text x="1050" y="701.25" font-size="15" fill="#495057" text-anchor="start">  primary + read replicas</text>
+<text x="1050" y="720.0" font-size="15" fill="#495057" text-anchor="start">• Redis: sessions, idempotency keys,</text>
+<text x="1050" y="738.75" font-size="15" fill="#495057" text-anchor="start">  read cache</text>
+<text x="1050" y="757.5" font-size="15" fill="#495057" text-anchor="start">• Payments / ledger service</text>
+<text x="1050" y="776.25" font-size="15" fill="#495057" text-anchor="start">• Observability (logs, traces)</text>
+<rect x="40" y="600" width="280" height="210" rx="10" fill="#ffe3e3" stroke="#e03131" stroke-width="2"/>
+
+<text x="50" y="625.0" font-size="15" fill="#e03131" text-anchor="start">NFRs · capacity (100M DAU)</text>
+<text x="50" y="643.75" font-size="15" fill="#e03131" text-anchor="start"></text>
+<text x="50" y="662.5" font-size="15" fill="#e03131" text-anchor="start">• Login ≈ 1K rps</text>
+<text x="50" y="681.25" font-size="15" fill="#e03131" text-anchor="start">• Home reads ≈ 10K rps</text>
+<text x="50" y="700.0" font-size="15" fill="#e03131" text-anchor="start">• Transfers ≈ 10K rps</text>
+<text x="50" y="718.75" font-size="15" fill="#e03131" text-anchor="start">• Consistency over availability</text>
+<text x="50" y="737.5" font-size="15" fill="#e03131" text-anchor="start">• ACID · idempotent transfers</text>
+<text x="50" y="756.25" font-size="15" fill="#e03131" text-anchor="start">• 99.9% availability</text>
+<text x="50" y="775.0" font-size="15" fill="#e03131" text-anchor="start">• Owner-scoped data · PII-ready</text>
+<polyline points="320,210 420,210" fill="none" stroke="#1e1e1e" stroke-width="2" marker-end="url(#ah)"/>
+<rect x="307.2" y="188.5" width="125.6" height="17.5" fill="#ffffff"/>
+<text x="370.0" y="202.5" font-size="14" fill="#1e1e1e" text-anchor="middle">HTTPS · cookie</text>
+<polyline points="180.0,360 180.0,420" fill="none" stroke="#1e1e1e" stroke-width="2" stroke-dasharray="8 6" marker-end="url(#ah)"/>
+<rect x="150.8" y="368.5" width="58.4" height="17.5" fill="#ffffff"/>
+<text x="180.0" y="382.5" font-size="14" fill="#1e1e1e" text-anchor="middle">assets</text>
+<polyline points="680,240 680,270" fill="none" stroke="#1e1e1e" stroke-width="2" marker-end="url(#ah)"/>
+<polyline points="500,240 500,270" fill="none" stroke="#1e1e1e" stroke-width="2" marker-end="url(#ah)"/>
+<polyline points="860,240 860,270" fill="none" stroke="#1e1e1e" stroke-width="2" marker-end="url(#ah)"/>
+<polyline points="500,360 500,400" fill="none" stroke="#1e1e1e" stroke-width="2" marker-end="url(#ah)"/>
+<rect x="449.8" y="358.5" width="100.39999999999999" height="17.5" fill="#ffffff"/>
+<text x="500.0" y="372.5" font-size="14" fill="#1e1e1e" text-anchor="middle">direct call</text>
+<polyline points="680,360 680,400" fill="none" stroke="#1e1e1e" stroke-width="2" marker-end="url(#ah)"/>
+<polyline points="860,360 860,400" fill="none" stroke="#1e1e1e" stroke-width="2" marker-end="url(#ah)"/>
+<polyline points="680.0,510 680.0,540" fill="none" stroke="#1e1e1e" stroke-width="2" marker-end="url(#ah)"/>
+<rect x="655.0" y="503.5" width="50.0" height="17.5" fill="#ffffff"/>
+<text x="680.0" y="517.5" font-size="14" fill="#1e1e1e" text-anchor="middle">rules</text>
+<polyline points="680.0,640 680.0,670" fill="none" stroke="#1e1e1e" stroke-width="2" marker-end="url(#ah)"/>
+<polyline points="940,720 990,720 990,475 1040,475" fill="none" stroke="#1e1e1e" stroke-width="2" marker-end="url(#ah)"/>
+<rect x="944.0" y="576.0" width="92.0" height="17.5" fill="#ffffff"/>
+<text x="990.0" y="590.0" font-size="14" fill="#1e1e1e" text-anchor="middle">implements</text>
+<polyline points="940,760 1040,760" fill="none" stroke="#1e1e1e" stroke-width="2" stroke-dasharray="8 6" marker-end="url(#ah)"/>
+<rect x="935.6" y="738.5" width="108.8" height="17.5" fill="#ffffff"/>
+<text x="990.0" y="752.5" font-size="14" fill="#1e1e1e" text-anchor="middle">swap adapter</text>
+</svg>
