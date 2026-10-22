@@ -12,6 +12,13 @@
     "cancel": "Cancelar",
     "backToHome": "Volver al inicio"
   },
+  "theme": {
+    "toggle": "Cambiar tema",
+    "label": "Tema",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "system": "Sistema"
+  },
   "notFound": {
     "title": "Página no encontrada",
     "description": "La página que buscas no existe o ya no está disponible."
