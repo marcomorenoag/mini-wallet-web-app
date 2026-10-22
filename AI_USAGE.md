@@ -55,6 +55,16 @@ The application core and the mock data layer were implemented by the AI on the `
 - Use cases for authentication, account overview, movements, contacts and transfers. Transfers are confirmed with owner-scoped idempotency keys.
 - A server-only composition root, ESLint layer boundaries, and unit tests for every layer.
 
+### Phase 4 — Services
+
+The HTTP layer was implemented by the AI on the `feat/phase-04-services` branch, following the API versioning and error contract decisions in `docs/PLAN.md`:
+
+- Versioned v1 contracts (DTO schemas and mappers, RFC 9457 problem details).
+- Route handlers under `/api/v1` with an httpOnly session cookie, plus an unversioned health probe.
+- Simulated faults for read and auth endpoints.
+- A Proxy route guard for protected pages.
+- In-process route handler tests and API E2E checks.
+
 ### Accepted
 
 - Patched dependency versions and the Node 24 LTS pin.

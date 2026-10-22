@@ -83,6 +83,50 @@ The mock behavior is configured through environment variables; see [`.env.exampl
 | `MOCK_TIMEOUT_DELAY_MS`  | `15000`                      | Delay of the TIMEOUT scenario                    |
 | `MOCK_SCENARIO_OVERRIDE` | `enabled` outside production | Whether a forced scenario is honored             |
 
+## API
+
+Mock services are exposed as Next.js Route Handlers under the versioned base path `/api/v1`. Authentication is carried by an httpOnly `mw_session` cookie set on login. Errors are returned as [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) problem details (`application/problem+json`) with a machine-readable `code` and, for validation errors, field-level `issues`. Responses are never cached (`Cache-Control: no-store`).
+
+| Method | Path                                 | Auth | Description                                               |
+| ------ | ------------------------------------ | ---- | --------------------------------------------------------- |
+| POST   | `/api/v1/auth/login`                 | —    | Starts a session for an email or phone identifier         |
+| POST   | `/api/v1/auth/logout`                | —    | Ends the session (idempotent)                             |
+| GET    | `/api/v1/account`                    | ✓    | User name and available balance                           |
+| GET    | `/api/v1/account/movements?limit=20` | ✓    | Recent movements, newest first                            |
+| GET    | `/api/v1/contacts`                   | ✓    | Saved contacts, favorites first                           |
+| POST   | `/api/v1/contacts`                   | ✓    | Saves a new contact                                       |
+| POST   | `/api/v1/transfers`                  | ✓    | Confirms a transfer; requires an `Idempotency-Key` header |
+| GET    | `/api/v1/transfers?idempotencyKey=…` | ✓    | Outcome of a confirmation (recovery after a timeout)      |
+| GET    | `/api/v1/transfers/{id}`             | ✓    | Completed transfer for the voucher                        |
+| GET    | `/api/health`                        | —    | Liveness probe (unversioned)                              |
+
+Transfer confirmation outcomes are mapped to HTTP statuses:
+
+| Status | Meaning                                        |
+| ------ | ---------------------------------------------- |
+| 201    | Completed                                      |
+| 202    | Still pending: the same key is being processed |
+| 422    | Insufficient funds, or a validation error      |
+| 503    | Network error; safe to retry with the same key |
+| 504    | Timeout                                        |
+| 500    | Unknown error                                  |
+
+**Scenario override (testing).** When overrides are enabled (outside production by default), an outcome can be forced with the `x-mock-scenario` header or the `mock_scenario` cookie. Accepted values are `SUCCESS`, `INSUFFICIENT_FUNDS`, `NETWORK`, `TIMEOUT` and `UNKNOWN`.
+
+- On transfer confirmation, the override drives the payment network outcome.
+- On other endpoints, `NETWORK` and `UNKNOWN` fail the request and `TIMEOUT` delays it, so that simulated error states can be reproduced.
+
+```bash
+curl -i -c jar -H 'content-type: application/json' \
+  -d '{"identifier":"ana@example.com"}' http://localhost:3000/api/v1/auth/login
+curl -i -b jar -H 'content-type: application/json' \
+  -H "Idempotency-Key: $(uuidgen)" -H 'x-mock-scenario: NETWORK' \
+  -d '{"amount":{"amount":25000,"currency":"MXN"},"recipientId":"cnt_luis"}' \
+  http://localhost:3000/api/v1/transfers
+```
+
+Pages are guarded optimistically by `src/proxy.ts`: anonymous visitors are redirected to `/login?next=…`. The session is always verified on the server.
+
 ## Tech stack
 
 | Package                       | Version | Notes                                                   |
