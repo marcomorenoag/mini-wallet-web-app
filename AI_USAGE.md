@@ -45,6 +45,16 @@ The domain core was implemented by the AI on the `feat/phase-02-domain` branch, 
 - Unit tests at 100% domain coverage.
 - An ESLint boundary rule that keeps `src/domain` free of React, Next.js and outer-layer imports.
 
+### Phase 3 — Ports, mock adapters and use cases
+
+The application core and the mock data layer were implemented by the AI on the `feat/phase-03-mock-data` branch, following the hexagonal-lite design in `docs/PLAN.md`:
+
+- Ports for repositories, the transfer ledger, the idempotency store, the payment processor, and the clock and id sources.
+- In-memory adapters over a `globalThis` database seeded from typed fixtures. Latency is simulated and configurable, and the ledger commits atomically.
+- A mock payment processor with weighted random outcomes and a forced-scenario override, enabled outside production.
+- Use cases for authentication, account overview, movements, contacts and transfers. Transfers are confirmed with owner-scoped idempotency keys.
+- A server-only composition root, ESLint layer boundaries, and unit tests for every layer.
+
 ### Accepted
 
 - Patched dependency versions and the Node 24 LTS pin.
