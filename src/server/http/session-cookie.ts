@@ -14,14 +14,18 @@ export const readSessionToken = (
   return parsed.success ? parsed.data : undefined;
 };
 
-export const setSessionCookie = (response: NextResponse, session: Session): void => {
-  response.cookies.set(SESSION_COOKIE, session.token, {
+/** Shared by route handlers (`NextResponse.cookies`) and Server Actions (`cookies()`). */
+export const sessionCookieOptions = (session: Session) =>
+  ({
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     path: "/",
     expires: new Date(session.expiresAt),
-  });
+  }) as const;
+
+export const setSessionCookie = (response: NextResponse, session: Session): void => {
+  response.cookies.set(SESSION_COOKIE, session.token, sessionCookieOptions(session));
 };
 
 export const clearSessionCookie = (response: NextResponse): void => {
