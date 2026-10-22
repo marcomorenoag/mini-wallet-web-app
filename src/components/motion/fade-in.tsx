@@ -2,6 +2,8 @@
 
 import { m, type HTMLMotionProps } from "motion/react";
 
+import { MOTION } from "@/styles/tokens";
+
 interface FadeInProps extends HTMLMotionProps<"div"> {
   /** Delay in seconds, used to stagger sibling elements. */
   readonly delay?: number;
@@ -13,7 +15,7 @@ export function FadeIn({ delay = 0, ...props }: FadeInProps) {
     <m.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.2, ease: "easeOut", delay }}
+      transition={{ duration: MOTION.duration.base, ease: MOTION.ease.emphasized, delay }}
       {...props}
     />
   );
