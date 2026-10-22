@@ -1,15 +1,15 @@
 import "server-only";
 
-import type { NextRequest, NextResponse } from "next/server";
+import type { NextResponse } from "next/server";
 
 import { type Session, type SessionToken, SessionTokenSchema } from "@/domain/auth/session";
 
 import { SESSION_COOKIE } from "./cookie-names";
 
 /** The cookie holds an opaque token; the session itself lives on the server. */
-export const readSessionToken = (
-  request: Pick<NextRequest, "cookies">,
-): SessionToken | undefined => {
+export const readSessionToken = (request: {
+  readonly cookies: { get(name: string): { value: string } | undefined };
+}): SessionToken | undefined => {
   const parsed = SessionTokenSchema.safeParse(request.cookies.get(SESSION_COOKIE)?.value);
   return parsed.success ? parsed.data : undefined;
 };

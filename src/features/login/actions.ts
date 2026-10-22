@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 
 import type { AppError } from "@/application/errors";
-import { getActionContext } from "@/server/actions/action-context";
+import { getRequestContext } from "@/server/request-context";
 import { SESSION_COOKIE } from "@/server/http/cookie-names";
 import { sessionCookieOptions } from "@/server/http/session-cookie";
 
@@ -28,7 +28,7 @@ export async function loginAction(
   const identifier = typeof raw === "string" ? raw : "";
 
   try {
-    const { cookies, useCases, simulateFault } = await getActionContext();
+    const { cookies, useCases, simulateFault } = await getRequestContext();
 
     const fault = await simulateFault();
     if (fault) return { identifier, problem: fault };
