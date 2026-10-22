@@ -1,0 +1,180 @@
+/*
+ * Design tokens — the single place where the visual language is defined.
+ *
+ *   1. Palette   raw color ramps; the only place where color values are written.
+ *   2. Semantic  what each color is used for, with its light and dark value side by side.
+ *   3. Theme     Tailwind scales (colors, spacing, radius, type, motion) built on top.
+ *
+ * Components only use semantic utilities (`bg-primary`, `text-muted-foreground`, …), so a palette
+ * change never touches a component. Every text pair below meets WCAG AA (≥ 4.5:1) in both themes.
+ * Motion values used from JavaScript are mirrored in `tokens.ts`.
+ */
+
+/* -------------------------------------------------------------------------------------------- */
+/* 1. Palette                                                                                    */
+/* -------------------------------------------------------------------------------------------- */
+
+:root {
+  /* Neutral: cool grays tinted toward the brand indigo; 50 is the brand off-white (#F8F8F8). */
+  --palette-neutral-0: oklch(1 0 0); /* #ffffff */
+  --palette-neutral-50: oklch(0.979 0 0); /* #f8f8f8 */
+  --palette-neutral-100: oklch(0.955 0.005 277.2); /* #eff0f3 */
+  --palette-neutral-200: oklch(0.91 0.005 277.2); /* #e0e1e5 */
+  --palette-neutral-300: oklch(0.85 0.006 277.2); /* #cccdd2 */
+  --palette-neutral-400: oklch(0.71 0.007 277.2); /* #a0a1a6 */
+  --palette-neutral-500: oklch(0.56 0.009 277.2); /* #73747a */
+  --palette-neutral-600: oklch(0.46 0.01 277.2); /* #56585e */
+  --palette-neutral-700: oklch(0.38 0.011 277.2); /* #414248 */
+  --palette-neutral-800: oklch(0.29 0.013 277.2); /* #2a2b32 */
+  --palette-neutral-900: oklch(0.22 0.013 277.2); /* #191a21 */
+  --palette-neutral-950: oklch(0.17 0.014 277.2); /* #0e0f16 */
+
+  /* Indigo: brand primary; 600 is the brand color (#5458C6). */
+  --palette-indigo-50: oklch(0.975 0.011 277.2); /* #f5f6fe */
+  --palette-indigo-100: oklch(0.945 0.026 277.2); /* #e8ecff */
+  --palette-indigo-200: oklch(0.895 0.051 277.2); /* #d3daff */
+  --palette-indigo-300: oklch(0.82 0.091 277.2); /* #b5bfff */
+  --palette-indigo-400: oklch(0.72 0.132 277.2); /* #909cf6 */
+  --palette-indigo-500: oklch(0.62 0.155 277.2); /* #717ae1 */
+  --palette-indigo-600: oklch(0.518 0.168 277.2); /* #5458c6 */
+  --palette-indigo-700: oklch(0.45 0.149 277.2); /* #4447a5 */
+  --palette-indigo-800: oklch(0.38 0.132 277.2); /* #343686 */
+  --palette-indigo-900: oklch(0.3 0.112 277.2); /* #232364 */
+  --palette-indigo-950: oklch(0.23 0.092 277.2); /* #151447 */
+
+  /* Orange: brand highlight; 500 is the brand color (#F86500). Too light for text on white. */
+  --palette-orange-50: oklch(0.975 0.013 44.1); /* #fff4f0 */
+  --palette-orange-100: oklch(0.945 0.029 44.1); /* #ffe7dd */
+  --palette-orange-200: oklch(0.895 0.058 44.1); /* #ffd1be */
+  --palette-orange-300: oklch(0.82 0.107 44.1); /* #ffae8b */
+  --palette-orange-400: oklch(0.76 0.151 44.1); /* #ff8e5c */
+  --palette-orange-500: oklch(0.684 0.198 44.1); /* #f86500 */
+  --palette-orange-600: oklch(0.6 0.174 44.1); /* #d05401 */
+  --palette-orange-700: oklch(0.45 0.13 44.1); /* #8d3601 */
+  --palette-orange-800: oklch(0.38 0.11 44.1); /* #702900 */
+  --palette-orange-900: oklch(0.3 0.087 44.1); /* #501b00 */
+  --palette-orange-950: oklch(0.23 0.067 44.1); /* #350f00 */
+
+  /* Green: credits and successful outcomes. */
+  --palette-green-50: oklch(0.975 0.039 152); /* #e4ffea */
+  --palette-green-100: oklch(0.945 0.063 152); /* #cefad8 */
+  --palette-green-400: oklch(0.72 0.125 152); /* #62bb7d */
+  --palette-green-600: oklch(0.518 0.136 152); /* #017d3e */
+  --palette-green-900: oklch(0.3 0.079 152); /* #003818 */
+
+  /* Red: errors and destructive actions. */
+  --palette-red-50: oklch(0.975 0.012 25); /* #fff4f3 */
+  --palette-red-100: oklch(0.945 0.027 25); /* #ffe6e4 */
+  --palette-red-400: oklch(0.72 0.156 25); /* #f77972 */
+  --palette-red-600: oklch(0.518 0.192 25); /* #be1f28 */
+  --palette-red-900: oklch(0.3 0.122 25); /* #5d0009 */
+}
+
+/* -------------------------------------------------------------------------------------------- */
+/* 2. Semantic tokens — light-dark(<light>, <dark>)                                              */
+/* -------------------------------------------------------------------------------------------- */
+
+/*
+ * `light-dark()` resolves against `color-scheme`: "light dark" follows the OS preference, and an
+ * explicit choice (stored by the theme toggle) pins it through the `data-theme` attribute.
+ */
+:root {
+  color-scheme: light dark;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+:root {
+  /* Surfaces */
+  --background: light-dark(var(--palette-neutral-50), var(--palette-neutral-950));
+  --foreground: light-dark(var(--palette-neutral-950), var(--palette-neutral-50));
+  --card: light-dark(var(--palette-neutral-0), var(--palette-neutral-900));
+  --card-foreground: light-dark(var(--palette-neutral-950), var(--palette-neutral-50));
+  --popover: light-dark(var(--palette-neutral-0), var(--palette-neutral-900));
+  --popover-foreground: light-dark(var(--palette-neutral-950), var(--palette-neutral-50));
+
+  /* Actions */
+  --primary: light-dark(var(--palette-indigo-600), var(--palette-indigo-400));
+  --primary-foreground: light-dark(var(--palette-neutral-0), var(--palette-neutral-950));
+  --secondary: light-dark(var(--palette-indigo-100), var(--palette-indigo-900));
+  --secondary-foreground: light-dark(var(--palette-indigo-800), var(--palette-indigo-100));
+  /* Brand orange, for sparing emphasis (badges, illustrations); always with dark text. */
+  --highlight: light-dark(var(--palette-orange-500), var(--palette-orange-400));
+  --highlight-foreground: var(--palette-neutral-950);
+
+  /* Subdued content and hover states */
+  --muted: light-dark(var(--palette-neutral-100), var(--palette-neutral-800));
+  --muted-foreground: light-dark(var(--palette-neutral-600), var(--palette-neutral-400));
+  --accent: light-dark(var(--palette-neutral-100), var(--palette-neutral-800));
+  --accent-foreground: light-dark(var(--palette-neutral-900), var(--palette-neutral-50));
+
+  /* Feedback */
+  --success: light-dark(var(--palette-green-600), var(--palette-green-400));
+  --success-foreground: light-dark(var(--palette-neutral-0), var(--palette-neutral-950));
+  --destructive: light-dark(var(--palette-red-600), var(--palette-red-400));
+
+  /* Lines and focus */
+  --border: light-dark(var(--palette-neutral-200), var(--palette-neutral-800));
+  --input: light-dark(var(--palette-neutral-300), var(--palette-neutral-700));
+  --ring: light-dark(var(--palette-indigo-500), var(--palette-indigo-400));
+
+  /* Shape */
+  --radius: 0.625rem;
+}
+
+/* -------------------------------------------------------------------------------------------- */
+/* 3. Tailwind theme                                                                             */
+/* -------------------------------------------------------------------------------------------- */
+
+@theme inline {
+  /* Colors: one utility family per semantic token (bg-*, text-*, border-*, ring-*, …). */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-highlight: var(--highlight);
+  --color-highlight-foreground: var(--highlight-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Spacing: every p-*, m-*, gap-*, w-* and h-* utility is a multiple of this base. */
+  --spacing: 0.25rem;
+
+  /* Radius: derived from a single base, so corners can be softened or sharpened at once. */
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* Typography: Geist is loaded by next/font in the root layout. */
+  --font-sans: var(--font-geist-sans);
+  --font-heading: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* Motion: CSS transitions; mirrored for Motion components in tokens.ts. */
+  --ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+  --default-transition-duration: 150ms;
+}

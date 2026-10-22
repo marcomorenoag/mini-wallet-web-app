@@ -65,6 +65,18 @@ The HTTP layer was implemented by the AI on the `feat/phase-04-services` branch,
 - A Proxy route guard for protected pages.
 - In-process route handler tests and API E2E checks.
 
+### Phase 5 — Foundations
+
+The UI foundations were implemented by the AI on the `feat/phase-05-foundations` branch, following the design system and i18n picks in `docs/PLAN.md`:
+
+- Tailwind CSS v4 and shadcn/ui (Radix primitives, Nova preset), with base components and design tokens. A `success` token was added for credits, and dark mode follows the OS preference.
+- Motion, loaded through `LazyMotion` with DOM features only and the reduced-motion preference honored.
+- next-intl without locale routing: a typed es-MX dictionary, error code → message keys, and cached money and date formatters in the Mexico City time zone.
+- A localized root layout, a mobile-first page shell with a skip link, and not-found and error pages.
+- Unit tests for formatters, dictionary coverage and the shell, and an E2E check for the localized not-found page.
+- Design tokens centralized in `src/styles/tokens.css` (palette, semantic tokens with `light-dark()`, Tailwind scales), with the brand-inspired palette derived and contrast-checked by the AI from the colors given by the author.
+- A light / dark / system theme toggle (icon button with a menu), persisted in `localStorage`, applied before the first paint and synced across tabs, with E2E checks of the rendered colors.
+
 ### Accepted
 
 - Patched dependency versions and the Node 24 LTS pin.
@@ -90,3 +102,5 @@ The HTTP layer was implemented by the AI on the `feat/phase-04-services` branch,
 - Selection of the final picks in `DECISIONS.md` from the researched options.
 - Delivery split into phases, each on its own branch and committed separately, to show progress.
 - Passive voice in all written documentation.
+- Manual and system theme modes, a single icon toggle shown on Home only, and a centralized design token file.
+- A neutral palette inspired by the Spin by OXXO brand colors (#5458C6, #F86500, #F8F8F8).

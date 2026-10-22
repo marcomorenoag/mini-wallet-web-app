@@ -62,6 +62,8 @@ npm run dev                            # http://localhost:3000
 | `npm run test:e2e`      | E2E tests (Playwright: desktop Chrome, mobile Safari) |
 | `npm run test:e2e:ui`   | E2E tests in Playwright UI mode                       |
 
+Vitest and Playwright refuse to start on a Node version older than the one pinned in `.nvmrc`, since jsdom crashes with an obscure `undici` error otherwise; `nvm use` fixes it.
+
 The E2E web server is started automatically: the dev server is reused locally, and the production build is tested when `CI` is set.
 
 ## Mock data
@@ -138,6 +140,10 @@ Pages are guarded optimistically by `src/proxy.ts`: anonymous visitors are redir
 | `@playwright/test`            | 1.64.x  | E2E tests                                               |
 | `zod`                         | 4.x     | Domain schemas, API contracts and inferred types        |
 | `prettier`                    | 3.x     | Formatting, integrated with ESLint                      |
+| `tailwindcss`                 | 4.3.x   | Styling via PostCSS; design tokens as CSS variables     |
+| `shadcn` (CLI) + `radix-ui`   | 4.x     | Components copied into `src/components/ui` (Nova style) |
+| `motion`                      | 14.x    | Animations, lazily loaded and reduced-motion aware      |
+| `next-intl`                   | 4.x     | Typed es-MX dictionary, no locale routing               |
 
 ## Known limitations
 
@@ -147,4 +153,4 @@ Pages are guarded optimistically by `src/proxy.ts`: anonymous visitors are redir
 - **Mock data is not persisted.** It is reset on every server restart, and it is not shared across serverless instances. A database adapter behind the same ports would be required for that.
 - **Login is mocked.** No secret is verified, and unknown identifiers are reported explicitly, which would allow account enumeration in a real system.
 - **TypeScript 7 and ESLint 10 were deliberately not adopted.** The project stays on the majors that `create-next-app@16.4.2` sets up and supports (TS 5.x, ESLint 9). ESLint 9.39 prints a "no longer supported" deprecation warning on install.
-- **The `unrs-resolver` and `fsevents` install scripts are denied** (`allowScripts` in `package.json`). Both scripts are only fallbacks for building or fetching native binaries, and prebuilt binaries are already shipped.
+- **The `unrs-resolver`, `fsevents`, `@parcel/watcher` and `@swc/core` install scripts are denied** (`allowScripts` in `package.json`). They are only fallbacks for building or fetching native binaries, and prebuilt binaries are already shipped. The last two are pulled in by the next-intl message extractor, which is not used.
