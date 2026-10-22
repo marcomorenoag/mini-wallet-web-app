@@ -3,34 +3,58 @@ import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
 import prettier from "eslint-config-prettier/flat";
 
+const FRAMEWORK_IMPORTS = ["react", "react-dom", "react/*", "react-dom/*", "next", "next/*"];
+
+/**
+ * Hexagonal layering: each layer may only import from the layers listed as allowed.
+ * domain ← ports ← application ← adapters; the composition root (src/server) wires them.
+ */
+const layer = (name, allowed, { framework = false, runtimeMarkers = false } = {}) => ({
+  files: [`src/${name}/**/*.{ts,tsx}`],
+  // Tests may wire real adapters to exercise a layer end to end.
+  ignores: ["**/*.test.{ts,tsx}"],
+  rules: {
+    "no-restricted-imports": [
+      "error",
+      {
+        patterns: [
+          ...(framework
+            ? []
+            : [
+                {
+                  group: FRAMEWORK_IMPORTS,
+                  message: `The ${name} layer must not depend on React or Next.js.`,
+                },
+              ]),
+          {
+            regex: `^@/(?!(?:${allowed.join("|")})/)`,
+            message: `The ${name} layer may only import from: ${allowed.join(", ")}.`,
+          },
+          ...(runtimeMarkers
+            ? []
+            : [
+                {
+                  group: ["server-only", "client-only"],
+                  message: `The ${name} layer must run on both client and server.`,
+                },
+              ]),
+        ],
+      },
+    ],
+  },
+});
+
+const layerBoundaries = [
+  layer("domain", ["domain"]),
+  layer("ports", ["domain", "ports"]),
+  layer("application", ["domain", "ports", "application"]),
+  layer("adapters", ["domain", "ports", "adapters"], { runtimeMarkers: true }),
+];
+
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
-  {
-    // The domain core stays framework-agnostic: no React, Next.js or outer-layer imports.
-    files: ["src/domain/**/*.{ts,tsx}"],
-    rules: {
-      "no-restricted-imports": [
-        "error",
-        {
-          patterns: [
-            {
-              group: ["react", "react-dom", "react/*", "react-dom/*", "next", "next/*"],
-              message: "The domain layer must not depend on React or Next.js.",
-            },
-            {
-              group: ["@/*", "!@/domain/*"],
-              message: "The domain layer must not import from outer layers.",
-            },
-            {
-              group: ["server-only", "client-only"],
-              message: "The domain layer must run on both client and server.",
-            },
-          ],
-        },
-      ],
-    },
-  },
+  ...layerBoundaries,
   // Disables stylistic rules that conflict with Prettier; must stay last among configs.
   prettier,
   // Override default ignores of eslint-config-next.
