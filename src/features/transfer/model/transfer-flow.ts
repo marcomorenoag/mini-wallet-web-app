@@ -27,7 +27,9 @@ export type TransferAction =
   | { readonly type: "AMOUNT_CHANGED"; readonly input: string }
   | { readonly type: "RECIPIENT_SELECTED"; readonly contactId: string }
   | { readonly type: "CONTACT_SAVED"; readonly contact: ContactDto }
-  | { readonly type: "RESET"; readonly idempotencyKey: string };
+  | { readonly type: "RESET"; readonly idempotencyKey: string }
+  /** Keeps the amount and recipient, with a new key: the previous one already has a final outcome. */
+  | { readonly type: "NEW_ATTEMPT"; readonly idempotencyKey: string };
 
 export const createDraft = (
   contacts: readonly ContactDto[],
@@ -52,6 +54,8 @@ export const transferFlowReducer = (
       };
     case "RESET":
       return createDraft(draft.contacts, action.idempotencyKey);
+    case "NEW_ATTEMPT":
+      return { ...draft, idempotencyKey: action.idempotencyKey };
   }
 };
 
