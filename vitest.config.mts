@@ -3,6 +3,10 @@ import { fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vitest/config";
 
+import { assertNodeVersion } from "./scripts/assert-node-version";
+
+assertNodeVersion();
+
 export default defineConfig({
   plugins: [react()],
   resolve: {

@@ -1,5 +1,9 @@
 import { defineConfig, devices } from "@playwright/test";
 
+import { assertNodeVersion } from "./scripts/assert-node-version";
+
+assertNodeVersion();
+
 const PORT = Number(process.env.PORT ?? 3000);
 const baseURL = `http://localhost:${PORT}`;
 const isCI = Boolean(process.env.CI);

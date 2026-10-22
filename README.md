@@ -62,6 +62,8 @@ npm run dev                            # http://localhost:3000
 | `npm run test:e2e`      | E2E tests (Playwright: desktop Chrome, mobile Safari) |
 | `npm run test:e2e:ui`   | E2E tests in Playwright UI mode                       |
 
+Vitest and Playwright refuse to start on a Node version older than the one pinned in `.nvmrc`, since jsdom crashes with an obscure `undici` error otherwise; `nvm use` fixes it.
+
 The E2E web server is started automatically: the dev server is reused locally, and the production build is tested when `CI` is set.
 
 ## Mock data
