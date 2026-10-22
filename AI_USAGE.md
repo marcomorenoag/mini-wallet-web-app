@@ -86,6 +86,15 @@ The login module was implemented by the AI on the `feat/phase-06-login` branch, 
 - Unit tests for the action, the form and the redirect validation, and E2E tests for the flow, faults, redirects and the no-JavaScript path.
 - E2E tests moved to a production build on a dedicated port, after a dev-server HMR reload loop under the test runner was diagnosed.
 
+### Phase 7 — Home
+
+The Home module was implemented by the AI on the `feat/phase-07-home` branch, stacked on the login branch:
+
+- A data access layer (`getCurrentUser`) that verifies the session on every request, with a `/session-expired` route that clears stale cookies without a redirect loop.
+- A server-rendered Home: the header (greeting, theme toggle, logout) in the segment layout, and the balance and movements streamed behind skeletons, with an empty state and an error state with retry.
+- A logout Server Action that works without JavaScript.
+- Unit tests for the data access layer, logout, the session-expired route and the Home components, and E2E tests for data, empty and error states, logout, stale sessions and theme switching.
+
 ### Accepted
 
 - Patched dependency versions and the Node 24 LTS pin.
