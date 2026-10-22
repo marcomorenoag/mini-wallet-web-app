@@ -41,25 +41,39 @@ Editable sources: [`system-design.excalidraw`](docs/system-design.excalidraw) an
 ## Getting started
 
 ```bash
-nvm use          # or install the version in .nvmrc
+nvm use                                # or install the version in .nvmrc
 npm ci
-npm run dev      # http://localhost:3000
+npx playwright install chromium webkit # browsers for E2E tests (one-off)
+npm run dev                            # http://localhost:3000
 ```
 
-| Script          | Description            |
-| --------------- | ---------------------- |
-| `npm run dev`   | Dev server (Turbopack) |
-| `npm run build` | Production build       |
-| `npm run start` | Serve production build |
-| `npm run lint`  | ESLint                 |
+| Script                  | Description                                           |
+| ----------------------- | ----------------------------------------------------- |
+| `npm run dev`           | Dev server (Turbopack)                                |
+| `npm run build`         | Production build                                      |
+| `npm run start`         | Serve production build                                |
+| `npm run lint`          | ESLint                                                |
+| `npm run typecheck`     | Route type generation + `tsc --noEmit`                |
+| `npm run format`        | Format all files with Prettier                        |
+| `npm run format:check`  | Verify formatting without writing                     |
+| `npm test`              | Unit/component tests (Vitest, single run)             |
+| `npm run test:watch`    | Unit/component tests in watch mode                    |
+| `npm run test:coverage` | Unit/component tests with v8 coverage (`coverage/`)   |
+| `npm run test:e2e`      | E2E tests (Playwright: desktop Chrome, mobile Safari) |
+| `npm run test:e2e:ui`   | E2E tests in Playwright UI mode                       |
+
+The E2E web server is started automatically: the dev server is reused locally, and the production build is tested when `CI` is set.
 
 ## Tech stack
 
-| Package                       | Version | Notes                                                 |
-| ----------------------------- | ------- | ----------------------------------------------------- |
-| `next` / `eslint-config-next` | 16.4.2  | Includes the 2026-10-14 security patches (≥ 16.4.1)   |
-| `react` / `react-dom`         | 19.3.1  | Pinned. 19.3.1 is React's 2026-10-14 security release |
-| `typescript`                  | 5.9.x   |                                                       |
+| Package                       | Version | Notes                                                   |
+| ----------------------------- | ------- | ------------------------------------------------------- |
+| `next` / `eslint-config-next` | 16.4.2  | Includes the 2026-10-14 security patches (≥ 16.4.1)     |
+| `react` / `react-dom`         | 19.3.1  | Pinned. 19.3.1 is React's 2026-10-14 security release   |
+| `typescript`                  | 5.9.x   | Stricter flags on top of `strict` (see `tsconfig.json`) |
+| `vitest` + Testing Library    | 5.x     | Unit and component tests (jsdom)                        |
+| `@playwright/test`            | 1.64.x  | E2E tests                                               |
+| `prettier`                    | 3.x     | Formatting, integrated with ESLint                      |
 
 ## Known limitations
 
@@ -67,4 +81,4 @@ npm run dev      # http://localhost:3000
 
 - **`npm audit` reports 5 high-severity findings.** They come from a single advisory ([GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm), `braces` stack-exhaustion DoS) pulled in through `eslint-config-next → @next/eslint-plugin-next → fast-glob → micromatch → braces`. It only affects lint tooling at dev time and is not in the runtime bundle. No patched `braces` release exists yet. The `npm audit fix --force` suggestion would downgrade `eslint-config-next` to 14.x, so that fix was not applied.
 - **TypeScript 7 and ESLint 10 were deliberately not adopted.** The project stays on the majors that `create-next-app@16.4.2` sets up and supports (TS 5.x, ESLint 9). ESLint 9.39 prints a "no longer supported" deprecation warning on install.
-- **The `unrs-resolver` postinstall script is denied** (`allowScripts` in `package.json`). The script is only a fallback for fetching native binaries, and the prebuilt optional dependency already covers this.
+- **The `unrs-resolver` and `fsevents` install scripts are denied** (`allowScripts` in `package.json`). Both scripts are only fallbacks for building or fetching native binaries, and prebuilt binaries are already shipped.
