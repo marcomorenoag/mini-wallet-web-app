@@ -97,10 +97,40 @@
       "total": "Total",
       "confirm": "Confirmar",
       "confirming": "Enviando…",
-      "cancel": "Cancelar",
-      "errorTitle": "No pudimos completar la transferencia"
+      "cancel": "Cancelar"
     },
     "errorTitle": "No pudimos preparar tu transferencia",
+    "errorDescription": "Revisa tu conexión e intenta de nuevo.",
+    "verifying": {
+      "title": "Estamos confirmando tu transferencia",
+      "description": "La red de pagos está tardando más de lo normal. No cierres esta pantalla ni la envíes de nuevo."
+    },
+    "failure": {
+      "title": "No pudimos completar la transferencia",
+      "INSUFFICIENT_FUNDS": "Tu saldo no alcanza para esta transferencia. Ajusta el monto e intenta de nuevo.",
+      "NETWORK": "Hubo un problema de conexión con la red de pagos. No se hizo ningún cargo; puedes reintentar sin riesgo de un cobro doble.",
+      "TIMEOUT": "La red de pagos no respondió a tiempo y aún no sabemos si se completó. Consulta el estado antes de volver a intentarlo.",
+      "UNKNOWN": "Ocurrió un error inesperado. No se hizo ningún cargo; puedes reintentar en unos momentos.",
+      "retry": "Reintentar",
+      "checkStatus": "Consultar estado",
+      "changeAmount": "Cambiar monto"
+    }
+  },
+  "voucher": {
+    "metadataTitle": "Comprobante",
+    "title": "Comprobante",
+    "success": "¡Transferencia exitosa!",
+    "folio": "Folio",
+    "to": "Para",
+    "amount": "Monto",
+    "date": "Fecha",
+    "status": "Estado",
+    "completed": "Completada",
+    "backToHome": "Volver al inicio",
+    "share": "Compartir comprobante",
+    "copied": "Comprobante copiado",
+    "shareText": "Transferencia de {amount} a {name} · Folio {folio} · {date}",
+    "errorTitle": "No pudimos cargar el comprobante",
     "errorDescription": "Revisa tu conexión e intenta de nuevo."
   },
   "errors": {

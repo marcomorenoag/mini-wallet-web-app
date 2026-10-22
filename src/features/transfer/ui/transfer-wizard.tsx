@@ -10,11 +10,13 @@ import { ROUTES } from "@/lib/routes";
 
 import { firstIncompleteStep, TRANSFER_STEPS, type TransferStep } from "../model/transfer-flow";
 import { useTransferFlow } from "../transfer-flow-context";
+import { useConfirmTransfer } from "../use-confirm-transfer";
 import { useTransferStep } from "../use-transfer-step";
 import { AmountStep } from "./amount-step";
 import { RecipientStep } from "./recipient-step";
 import { StepHeading } from "./step-heading";
 import { SummaryStep } from "./summary-step";
+import { TransferFailure, TransferVerifying } from "./transfer-outcome-views";
 
 const indexOf = (step: TransferStep) => TRANSFER_STEPS.indexOf(step);
 
@@ -41,8 +43,9 @@ export function TransferBackLink() {
 /** Amount → recipient → summary, client-rendered over data loaded by the page. */
 export function TransferWizard() {
   const t = useTranslations("transfer");
-  const { draft, balance } = useTransferFlow();
+  const { draft, dispatch, balance } = useTransferFlow();
   const { step, goTo } = useTransferStep();
+  const confirmation = useConfirmTransfer();
   // Focus moves to the step title on step changes, but not on the first render.
   const [previousStep, setPreviousStep] = useState(step);
   const [hasNavigated, setHasNavigated] = useState(false);
@@ -61,6 +64,23 @@ export function TransferWizard() {
 
   if (blocked) return null;
 
+  // Outcomes of the confirmation replace the wizard until the user picks the next action.
+  if (confirmation.state.status === "verifying") return <TransferVerifying />;
+  if (confirmation.state.status === "failed") {
+    return (
+      <TransferFailure
+        code={confirmation.state.code}
+        onRetry={confirmation.confirm}
+        onCheckStatus={confirmation.checkStatus}
+        onChangeAmount={() => {
+          dispatch({ type: "NEW_ATTEMPT", idempotencyKey: crypto.randomUUID() });
+          confirmation.reset();
+          goTo("amount");
+        }}
+      />
+    );
+  }
+
   const titles = {
     amount: t("amount.title"),
     recipient: t("recipient.title"),
@@ -77,7 +97,12 @@ export function TransferWizard() {
       </div>
       {step === "amount" ? <AmountStep onContinue={() => goTo("recipient")} /> : null}
       {step === "recipient" ? <RecipientStep onContinue={() => goTo("summary")} /> : null}
-      {step === "summary" ? <SummaryStep /> : null}
+      {step === "summary" ? (
+        <SummaryStep
+          pending={confirmation.state.status === "submitting"}
+          onConfirm={confirmation.confirm}
+        />
+      ) : null}
     </div>
   );
 }
