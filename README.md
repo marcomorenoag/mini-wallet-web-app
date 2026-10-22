@@ -73,6 +73,7 @@ The E2E web server is started automatically: the dev server is reused locally, a
 | `typescript`                  | 5.9.x   | Stricter flags on top of `strict` (see `tsconfig.json`) |
 | `vitest` + Testing Library    | 5.x     | Unit and component tests (jsdom)                        |
 | `@playwright/test`            | 1.64.x  | E2E tests                                               |
+| `zod`                         | 4.x     | Domain schemas, API contracts and inferred types        |
 | `prettier`                    | 3.x     | Formatting, integrated with ESLint                      |
 
 ## Known limitations

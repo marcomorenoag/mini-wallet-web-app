@@ -8,10 +8,28 @@ export default defineConfig({
     tsconfigPaths: true,
   },
   test: {
-    environment: "jsdom",
-    setupFiles: ["./vitest.setup.ts"],
-    include: ["src/**/*.test.{ts,tsx}"],
     restoreMocks: true,
+    projects: [
+      {
+        extends: true,
+        test: {
+          // Pure domain logic runs in plain Node: no DOM is available, nor needed.
+          name: "domain",
+          environment: "node",
+          include: ["src/domain/**/*.test.ts"],
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: "ui",
+          environment: "jsdom",
+          setupFiles: ["./vitest.setup.ts"],
+          include: ["src/**/*.test.{ts,tsx}"],
+          exclude: ["src/domain/**"],
+        },
+      },
+    ],
     coverage: {
       provider: "v8",
       include: ["src/**/*.{ts,tsx}"],

@@ -32,7 +32,18 @@ The architecture, project structure, library choices and view design are owned b
 
 ### Phase 1 — Tooling
 
-The phase 1 code is the only code written by the AI: Prettier + EditorConfig, stricter TypeScript settings with a `typecheck` script, Vitest + React Testing Library, and Playwright. It was implemented on the `feat/phase-01-tools` branch, split into conventional commits.
+The tooling was implemented by the AI: Prettier + EditorConfig, stricter TypeScript settings with a `typecheck` script, Vitest + React Testing Library, and Playwright. It was implemented on the `feat/phase-01-tools` branch, split into conventional commits.
+
+### Phase 2 — Domain core
+
+The domain core was implemented by the AI on the `feat/phase-02-domain` branch, following the architecture and rules defined in `docs/PLAN.md`:
+
+- Zod schemas with branded ids for users, accounts, movements, contacts and transfers.
+- A money value object based on integer minor units.
+- Login identifier and phone normalization (email or Mexican phone, normalized to E.164).
+- Typed error codes, and the three transfer business rules as a pure function.
+- Unit tests at 100% domain coverage.
+- An ESLint boundary rule that keeps `src/domain` free of React, Next.js and outer-layer imports.
 
 ### Accepted
 
