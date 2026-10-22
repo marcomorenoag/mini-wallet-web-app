@@ -65,6 +65,16 @@ The HTTP layer was implemented by the AI on the `feat/phase-04-services` branch,
 - A Proxy route guard for protected pages.
 - In-process route handler tests and API E2E checks.
 
+### Phase 5 — Foundations
+
+The UI foundations were implemented by the AI on the `feat/phase-05-foundations` branch, following the design system and i18n picks in `docs/PLAN.md`:
+
+- Tailwind CSS v4 and shadcn/ui (Radix primitives, Nova preset), with base components and design tokens. A `success` token was added for credits, and dark mode follows the OS preference.
+- Motion, loaded through `LazyMotion` with DOM features only and the reduced-motion preference honored.
+- next-intl without locale routing: a typed es-MX dictionary, error code → message keys, and cached money and date formatters in the Mexico City time zone.
+- A localized root layout, a mobile-first page shell with a skip link, and not-found and error pages.
+- Unit tests for formatters, dictionary coverage and the shell, and an E2E check for the localized not-found page.
+
 ### Accepted
 
 - Patched dependency versions and the Node 24 LTS pin.
