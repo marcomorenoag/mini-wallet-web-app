@@ -77,6 +77,15 @@ The UI foundations were implemented by the AI on the `feat/phase-05-foundations`
 - Design tokens centralized in `src/styles/tokens.css` (palette, semantic tokens with `light-dark()`, Tailwind scales), with the brand-inspired palette derived and contrast-checked by the AI from the colors given by the author.
 - A light / dark / system theme toggle (icon button with a menu), persisted in `localStorage`, applied before the first paint and synced across tabs, with E2E checks of the rendered colors.
 
+### Phase 6 — Login
+
+The login module was implemented by the AI on the `feat/phase-06-login` branch, after the author chose a Server Action over a client fetch to the API route:
+
+- A login Server Action that reuses the login use case, sets the httpOnly session cookie and redirects to a validated `next` destination (open-redirect protection).
+- A login page with instant client-side validation (the shared Zod schema), inline field errors, a pending state and an error banner for simulated faults; it also works without JavaScript.
+- Unit tests for the action, the form and the redirect validation, and E2E tests for the flow, faults, redirects and the no-JavaScript path.
+- E2E tests moved to a production build on a dedicated port, after a dev-server HMR reload loop under the test runner was diagnosed.
+
 ### Accepted
 
 - Patched dependency versions and the Node 24 LTS pin.
@@ -104,3 +113,4 @@ The UI foundations were implemented by the AI on the `feat/phase-05-foundations`
 - Passive voice in all written documentation.
 - Manual and system theme modes, a single icon toggle shown on Home only, and a centralized design token file.
 - A neutral palette inspired by the Spin by OXXO brand colors (#5458C6, #F86500, #F8F8F8).
+- Login submitted through a Server Action (progressive enhancement), with the API route kept for API clients.

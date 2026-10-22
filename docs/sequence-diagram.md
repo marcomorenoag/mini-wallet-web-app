@@ -17,13 +17,13 @@ sequenceDiagram
         Note over U,R: 01 · Login
         U->>B: Enter phone or email
         B->>B: Validate format (shared Zod schema)
-        B->>N: POST /api/v1/auth/login
+        B->>N: Server Action loginAction (form POST, works without JS)
         N->>D: login(identifier)
         D->>R: findUser(identifier)
         alt User found
             R-->>D: User
             D-->>N: Session
-            N-->>B: Set httpOnly session cookie · redirect /home
+            N-->>B: Set httpOnly session cookie · redirect ?next (validated) or /home
         else Not found / simulated error
             N-->>B: Error code → error state
         end

@@ -35,6 +35,8 @@
 - **Error contract:** errors are modelled as a typed union of codes (`INSUFFICIENT_FUNDS | NETWORK | TIMEOUT | UNKNOWN | VALIDATION`) and are mapped to UI states and dictionary keys.
 - **Business rules:** amount, balance and recipient rules are validated in the client for feedback and re-validated on the server, which is the source of truth.
 - **Session & permissions:** the mock session is stored in an `httpOnly` cookie, routes are guarded optimistically in `proxy.ts`, and ownership is re-checked in the use-case layer.
+- **Login submission:** the login form is submitted through a Server Action that calls the same use case as `POST /api/v1/auth/login`, so it works without JavaScript; the `next` destination is validated to prevent open redirects. Transfers use the API routes, so both mechanisms are showcased.
+- **E2E target:** E2E tests run against a production build on a dedicated port, because dev-mode HMR reloads made interactions flaky under the test runner.
 - **Rendering:** Home is server-rendered with streaming, the transfer flow is client-rendered, and the voucher is server-rendered by transaction id so it survives a refresh.
 
 ## Project structure
