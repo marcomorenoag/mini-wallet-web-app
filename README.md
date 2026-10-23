@@ -40,6 +40,17 @@ Editable sources: [`system-design.excalidraw`](docs/system-design.excalidraw) an
 
 ## Getting started
 
+With [nvm](https://github.com/nvm-sh/nvm) installed, the Makefile takes care of the Node version:
+
+```bash
+make setup   # installs Node from .nvmrc, the npm dependencies and the E2E browsers
+make dev     # http://localhost:3000
+make check   # lint, types, formatting and unit tests
+make ci      # everything the CI pipeline runs, E2E included
+```
+
+`make` lists every command. Each one runs with the version pinned in `.nvmrc`, loaded through nvm, so `nvm use` is never needed first. Without nvm, Node 24.22.1 has to be installed by hand, and the npm scripts below are used directly:
+
 ```bash
 nvm use                                # or install the version in .nvmrc
 npm ci
