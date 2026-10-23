@@ -87,6 +87,52 @@ bruno/                 Runnable API collection
   - Components under `ui/` only render state and forward events.
 - **Copy and visual values are data.** Text is read from the es-MX dictionary, with error codes mapped to message keys in one place (`src/i18n/error-messages.ts`). Colors, spacing, radius and motion are read from the token file.
 
+## Design patterns and SOLID
+
+Patterns were applied where they removed a concrete problem, not for their own sake: the brief values simple, extensible solutions over abstraction.
+
+### SOLID
+
+| Principle             | Where                                                                                                                                     | Why                                                                                                                                                                                       |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Single responsibility | Layers (`domain`, `application`, `adapters`, `server`) and per-feature files (`data.ts`, `actions.ts`, `api.ts`, `model/`, `ui/`)         | Each file changes for one reason: a business rule, a data source, a wire format or a screen.                                                                                              |
+| Open/closed           | Typed lookup tables keyed by unions (problem codes, failure actions, mock scenarios) and versioned contracts (`contracts/v1`)             | A new error code or scenario is added as a table entry (the compiler lists every table that misses it), and an API `v2` is added next to `v1` without editing the use cases.              |
+| Liskov substitution   | Port implementations (`ports/*` ← `adapters/mock/*`)                                                                                      | Any implementation honoring a port's contract can replace the in-memory one; no class inheritance is used, so substitution only concerns these interfaces.                                |
+| Interface segregation | Small ports (`AccountRepository`, `ContactRepository`, `TransferLedger`, `IdempotencyStore`, `TransferProcessor`, `Clock`, `IdGenerator`) | Each use case receives only the ports it uses (e.g. `TransferDeps`), instead of one large data-access object.                                                                             |
+| Dependency inversion  | Use cases depend on ports; adapters are bound once in the composition root (`src/server/container.ts`)                                    | The mock adapters can be replaced by a database or a real payment network without touching the domain or the use cases. ESLint enforces the direction of the dependencies between layers. |
+
+### Design patterns
+
+| Pattern                                     | Where                                                                                                                                                    | Why                                                                                                                      |
+| ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Ports and adapters (hexagonal)              | `ports/`, `adapters/`, `src/server/container.ts`                                                                                                         | Business rules are isolated from frameworks and data sources.                                                            |
+| Repository                                  | `AccountRepository`, `ContactRepository`, `MovementRepository`…                                                                                          | Data access is hidden behind collection-like interfaces.                                                                 |
+| Factory functions with dependency injection | `make*` use cases, `createInMemory*` adapters                                                                                                            | Dependencies are passed explicitly, so every unit is tested with fakes and no DI container is needed.                    |
+| Composition root                            | `getUseCases()` in `src/server/container.ts`                                                                                                             | Ports are bound to adapters in a single place.                                                                           |
+| Strategy                                    | `TransferProcessor` (mock payment network), injected `random`, `wait` and scenario weights; the confirmation routine's injected `submit` / `checkStatus` | Behavior is swapped without changing the caller, which makes the random and time-based paths deterministic in tests.     |
+| Data mapper / anti-corruption layer         | `contracts/v1/dto.ts` (`to*Dto`), `src/server/http/problem.ts`                                                                                           | The wire format is versioned separately from the domain, and application errors are translated to HTTP only at the edge. |
+| Decorator (higher-order handler)            | `authenticatedHandler` in `src/server/http/api-handler.ts`                                                                                               | Session checks, simulated faults and error mapping wrap every route handler without being repeated in it.                |
+| Facade                                      | Browser API client (`features/transfer/api.ts`)                                                                                                          | `fetch`, response validation and problem mapping are hidden behind typed functions.                                      |
+| Result type                                 | `domain/shared/result.ts`                                                                                                                                | Expected failures are values the compiler forces callers to handle; exceptions are kept for unexpected errors.           |
+| State machine (reducer and tagged unions)   | Transfer draft reducer, confirmation state, wizard steps                                                                                                 | Every state and transition is explicit and exhaustively checked.                                                         |
+| Idempotent receiver                         | Idempotency key per draft, `IdempotencyStore`                                                                                                            | A retried confirmation never debits twice.                                                                               |
+| Observer                                    | Theme store (`useSyncExternalStore` and `storage` events)                                                                                                | Every mounted toggle and other tabs stay in sync with the stored theme.                                                  |
+| Provider and view-model hooks               | `TransferFlowProvider`, `useConfirmTransfer`, `useTransferStep`                                                                                          | Client state is scoped to its feature, and components only render state.                                                 |
+
+### Switch statements and lookup tables
+
+Lookup tables (`Record<Union, Value>`) are used where a value is looked up by a key: HTTP statuses of transfer outcomes, problem codes of application errors, the mock network's answer and fault per scenario, problem titles and statuses, and the action of each failure screen. A table is shorter, keeps the mapping as data, and is still exhaustive, since a missing key fails to compile.
+
+`switch` is kept where each case narrows a tagged union to read its own fields or runs different side effects: the transfer draft reducer, the DTO mappers, settling a confirmation response and routing its result. Replacing those with a table of functions would need a type cast for every call (TypeScript cannot correlate the key with the narrowed type), which removes the safety the switch provides.
+
+### Considered and not applied
+
+- **Class hierarchies** (e.g. a base repository): functions and interfaces were enough, and composition was preferred over inheritance.
+- **A DI container library**: a composition root function already binds every dependency in one place.
+- **Domain events and CQRS**: a movement is written with its transfer in the same critical section, and reads and writes are already separate use cases. Events would become useful with a real database (e.g. an outbox for notifications).
+- **Specification pattern for the transfer rules**: three rules fit a pure function. It would pay off once limits, KYC tiers or per-recipient rules are added.
+- **Retry with backoff and a circuit breaker**: they belong in a real payment network adapter, not in the mock.
+
 ## Edge cases considered
 
 **Amounts and money**
