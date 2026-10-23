@@ -138,6 +138,9 @@ Issues reported by the author while testing on a phone were debugged and fixed b
 - Idempotency keys could not be generated over plain HTTP, since `crypto.randomUUID` is only exposed in secure contexts. A fallback built on `crypto.getRandomValues` was added.
 - "Continuar" gave no feedback, because every wizard step was a router navigation that re-rendered the page on the server. Steps are now changed through the History API and applied instantly.
 - Links, logout and "Reintentar" showed no pending state while waiting on the network. A spinner is now shown on each of them.
+- The first CI run exposed two problems on WebKit for Linux:
+  - The `Secure` session cookie was dropped over the plain-HTTP E2E server, so a `SESSION_COOKIE_SECURE=false` override was added for that server only.
+  - A hydration race: text typed or autofilled before hydration was wiped from the controlled login and amount fields, and the client check blocked the submission. It was reproduced deterministically by holding back the app scripts in Playwright. Both fields were made uncontrolled and are read from the form on submit, with regression tests.
 - A transfer of $910 against a balance of $12,000 was rejected for insufficient funds. No balance defect was found: the mock payment network drew that outcome at random, as the brief describes. On the author's decision, it is no longer drawn at random. It is only returned when the server's balance really does not cover the amount, and the flow then fetches the current balance.
 
 ### Accepted
