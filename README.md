@@ -7,7 +7,7 @@ A mini financial wallet built with Next.js 16 + TypeScript as a technical challe
 - **Login:** phone or email, with validation, loading and simulated error states, and a mocked persisted session.
 - **Home:** balance, user name and recent movements, with loading, empty and error states.
 - **New Transaction:** amount, a favorite or newly saved contact, and a summary before confirming.
-- **Confirmation / Voucher:** a randomized mocked outcome (success, network error, insufficient funds, timeout, unknown), each with its own handling.
+- **Confirmation / Voucher:** a randomized mocked outcome (success, network error, timeout, unknown), plus insufficient funds when the balance no longer covers the amount, each with its own handling.
 
 Business rules (amount > 0, amount ≤ balance, recipient required) live in a framework-agnostic domain core. They are enforced on the server behind versioned API routes (`/api/v1/*`) and reused in the UI for instant feedback.
 
@@ -80,7 +80,11 @@ The services are backed by in-memory adapters seeded from typed fixtures (`src/a
 | Bruno Díaz   | `bruno@example.com` or `55 8765 4321` | Balance of $500.00 MXN, no movements or contacts (empty states)                            |
 | Diana Torres | `diana@example.com` or `55 2468 1357` | Balance of $50,000.00 MXN, contacts, no movements; used by E2E flows that create transfers |
 
-Transfer confirmations are answered by a mock payment network that picks a weighted random outcome: success 60%, and 10% each for insufficient funds, network error, timeout and unknown error. The TIMEOUT outcome is modelled as a slow approval, so the result has to be recovered by idempotency key. A specific outcome can be forced per request for testing when overrides are enabled.
+Transfer confirmations are answered by a mock payment network that picks a weighted random outcome: success 70%, and 10% each for network error, timeout and unknown error.
+
+Insufficient funds is not drawn at random, since a rejection that contradicts the balance on screen reads as a bug. It is returned when the server's current balance does not cover the amount. To reproduce it, start a transfer, spend part of the balance from another tab, then confirm the full amount. The flow then shows the updated balance on the amount step.
+
+The TIMEOUT outcome is modelled as a slow approval, so the result has to be recovered by idempotency key. A specific outcome can be forced per request for testing when overrides are enabled.
 
 The mock behavior is configured through environment variables; see [`.env.example`](.env.example).
 

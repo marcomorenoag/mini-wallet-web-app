@@ -137,6 +137,7 @@ Issues reported by the author while testing on a phone were debugged and fixed b
 - Idempotency keys could not be generated over plain HTTP, since `crypto.randomUUID` is only exposed in secure contexts. A fallback built on `crypto.getRandomValues` was added.
 - "Continuar" gave no feedback, because every wizard step was a router navigation that re-rendered the page on the server. Steps are now changed through the History API and applied instantly.
 - Links, logout and "Reintentar" showed no pending state while waiting on the network. A spinner is now shown on each of them.
+- A transfer of $910 against a balance of $12,000 was rejected for insufficient funds. No balance defect was found: the mock payment network drew that outcome at random, as the brief describes. On the author's decision, it is no longer drawn at random. It is only returned when the server's balance really does not cover the amount, and the flow then fetches the current balance.
 
 ### Accepted
 
@@ -166,3 +167,4 @@ Issues reported by the author while testing on a phone were debugged and fixed b
 - Manual and system theme modes, a single icon toggle shown on Home only, and a centralized design token file.
 - A neutral palette inspired by the Spin by OXXO brand colors (#5458C6, #F86500, #F8F8F8).
 - Login submitted through a Server Action (progressive enhancement), with the API route kept for API clients.
+- Insufficient funds returned only on a real balance shortfall instead of at random, so the outcome never contradicts the balance on screen.
