@@ -32,7 +32,6 @@ export function LoginForm({ next }: LoginFormProps) {
   const tErrors = useTranslations("errors");
   const [state, formAction, pending] = useActionState(loginAction, INITIAL_LOGIN_STATE);
 
-  const [identifier, setIdentifier] = useState(state.identifier);
   const [clientError, setClientError] = useState<ValidationErrorCode | null>(null);
   // A server error is hidden once the field is edited after that response.
   const [editedAfter, setEditedAfter] = useState<typeof state | null>(null);
@@ -44,7 +43,10 @@ export function LoginForm({ next }: LoginFormProps) {
   const problem = pending ? undefined : state.problem;
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    const error = validateIdentifier(identifier);
+    // The field is read from the DOM, not from state: a value typed or autofilled before the page
+    // was hydrated never went through `onChange`, but it is what the user sees and submits.
+    const value = new FormData(event.currentTarget).get("identifier");
+    const error = validateIdentifier(typeof value === "string" ? value : "");
     if (!error) return;
     // Invalid input never reaches the server.
     event.preventDefault();
@@ -73,16 +75,17 @@ export function LoginForm({ next }: LoginFormProps) {
           autoCapitalize="none"
           spellCheck={false}
           placeholder={t("identifierPlaceholder")}
-          value={identifier}
+          // Uncontrolled, so hydration never resets what was typed before it. The submitted value
+          // is echoed by the action, and React restores it when it resets the form afterwards.
+          defaultValue={state.identifier}
           onChange={(event) => {
-            const { value } = event.target;
-            setIdentifier(value);
             setEditedAfter(state);
             // Once an error was shown, it is re-checked while typing so it clears when fixed.
-            if (clientError) setClientError(validateIdentifier(value));
+            if (clientError) setClientError(validateIdentifier(event.target.value));
           }}
-          onBlur={() => {
-            if (identifier.trim()) setClientError(validateIdentifier(identifier));
+          onBlur={(event) => {
+            const { value } = event.target;
+            if (value.trim()) setClientError(validateIdentifier(value));
           }}
           aria-invalid={fieldError ? true : undefined}
           aria-describedby={fieldError ? errorId : undefined}

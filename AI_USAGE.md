@@ -120,12 +120,13 @@ The E2E suite was completed by the AI on the `feat/phase-10-e2e` branch, stacked
 - Automated WCAG 2.1 AA checks with axe on every screen and state (login errors, Home with data, empty and error states, each transfer step, the failure screen, the voucher and the not-found page), in both themes.
 - A real contrast defect was found by those checks: the primary button hover (shadcn default `bg-primary/80`) dropped white text to 3.92:1, so it was darkened instead of made translucent.
 - A keyboard-only transfer (Tab, Enter, Space and arrow keys), the skip link and the theme menu.
+- A GitHub Actions workflow running lint, types, formatting and unit tests, then the E2E suite on Chromium and WebKit. It was published after the docs phase, since pushing workflow files required an extra token scope.
 
 ### Phase 11 — Documentation
 
 The documentation was completed by the AI on the `feat/phase-11-docs` branch, stacked on the E2E branch:
 
-- The open sections of `DECISIONS.md` (project structure, UI and business logic separation, edge cases, and what would be done differently), written from the implemented code. Planned items that were not delivered (Lighthouse CI, bundle and Web Vitals budgets, the CI pipeline) are listed there instead of being presented as done.
+- The open sections of `DECISIONS.md` (project structure, UI and business logic separation, edge cases, and what would be done differently), written from the implemented code. Planned items that were not delivered (Lighthouse CI, bundle and Web Vitals budgets) are listed there instead of being presented as done.
 - A Bruno collection for every v1 endpoint, with assertions on each request. It was run twice in a row against a production build to confirm that it can be repeated.
 - README updates: the collection, the extra test tooling and the current `npm audit` findings.
 
@@ -137,6 +138,9 @@ Issues reported by the author while testing on a phone were debugged and fixed b
 - Idempotency keys could not be generated over plain HTTP, since `crypto.randomUUID` is only exposed in secure contexts. A fallback built on `crypto.getRandomValues` was added.
 - "Continuar" gave no feedback, because every wizard step was a router navigation that re-rendered the page on the server. Steps are now changed through the History API and applied instantly.
 - Links, logout and "Reintentar" showed no pending state while waiting on the network. A spinner is now shown on each of them.
+- The first CI run exposed two problems on WebKit for Linux:
+  - The `Secure` session cookie was dropped over the plain-HTTP E2E server, so a `SESSION_COOKIE_SECURE=false` override was added for that server only.
+  - A hydration race: text typed or autofilled before hydration was wiped from the controlled login and amount fields, and the client check blocked the submission. It was reproduced deterministically by holding back the app scripts in Playwright. Both fields were made uncontrolled and are read from the form on submit, with regression tests.
 - A transfer of $910 against a balance of $12,000 was rejected for insufficient funds. No balance defect was found: the mock payment network drew that outcome at random, as the brief describes. On the author's decision, it is no longer drawn at random. It is only returned when the server's balance really does not cover the amount, and the flow then fetches the current balance.
 
 ### Accepted

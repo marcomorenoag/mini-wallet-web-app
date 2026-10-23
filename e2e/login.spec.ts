@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 
-import { forceScenario } from "./support";
+import { delayHydration, forceScenario } from "./support";
 
 const login = async (page: Page, identifier: string) => {
   await page.getByLabel("Teléfono o correo electrónico").fill(identifier);
@@ -54,6 +54,18 @@ test.describe("login", () => {
     const alert = page.getByRole("alert").filter({ hasText: "No pudimos iniciar sesión" });
     await expect(alert).toContainText("Hubo un problema de conexión. Intenta de nuevo.");
     await expect(page).toHaveURL(/\/login$/);
+  });
+});
+
+test.describe("login on a slow device", () => {
+  test("keeps a value typed or autofilled before the page is interactive", async ({ page }) => {
+    const { hydrate } = await delayHydration(page);
+    await page.goto("/login", { waitUntil: "commit" });
+    await page.getByLabel("Teléfono o correo electrónico").fill("ana@example.com");
+    await hydrate();
+
+    await page.getByRole("button", { name: "Continuar" }).click();
+    await expect(page).toHaveURL(/\/home$/);
   });
 });
 

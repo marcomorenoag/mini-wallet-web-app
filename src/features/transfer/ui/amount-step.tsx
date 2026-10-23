@@ -23,7 +23,12 @@ export function AmountStep({ onContinue }: { readonly onContinue: () => void }) 
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const check = checkAmount(draft.amountInput, balance);
+    // The field is read from the DOM, not from the draft: an amount typed before the page was
+    // hydrated never went through `onChange`, but it is what the user sees.
+    const value = new FormData(event.currentTarget).get("amount");
+    const input = typeof value === "string" ? value : "";
+    if (input !== draft.amountInput) dispatch({ type: "AMOUNT_CHANGED", input });
+    const check = checkAmount(input, balance);
     if (!check.ok) {
       setError(check.code);
       inputRef.current?.focus();
@@ -50,7 +55,9 @@ export function AmountStep({ onContinue }: { readonly onContinue: () => void }) 
             inputMode="decimal"
             autoComplete="off"
             placeholder="0.00"
-            value={draft.amountInput}
+            // Uncontrolled, so hydration never resets what was typed before it; the draft keeps
+            // the value for the following steps and for coming back to this one.
+            defaultValue={draft.amountInput}
             onChange={(event) => {
               dispatch({ type: "AMOUNT_CHANGED", input: event.target.value });
               // Once an error was shown, it is re-checked while typing so it clears when fixed.

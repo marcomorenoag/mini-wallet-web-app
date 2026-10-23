@@ -68,7 +68,7 @@ Vitest and Playwright refuse to start on a Node version older than the one pinne
 
 The E2E web server is started automatically on port 3100 (`E2E_PORT`) from a fresh production build, locally and in CI. The dev server is not used: under the test runner, Turbopack HMR keeps forcing full page reloads, which makes interactions flaky.
 
-Besides the user flows and the five confirmation scenarios, the E2E suite checks every screen against WCAG 2.1 AA with axe in both themes (`e2e/a11y.spec.ts`) and completes a transfer with the keyboard only (`e2e/keyboard.spec.ts`).
+Besides the user flows and the five confirmation scenarios, the E2E suite checks every screen against WCAG 2.1 AA with axe in both themes (`e2e/a11y.spec.ts`) and completes a transfer with the keyboard only (`e2e/keyboard.spec.ts`). The same checks are run by GitHub Actions on every pull request and push to `main` (`.github/workflows/ci.yml`): lint, types, formatting and unit tests, then the E2E suite on Chromium and WebKit.
 
 ## Mock data
 
@@ -88,12 +88,13 @@ The TIMEOUT outcome is modelled as a slow approval, so the result has to be reco
 
 The mock behavior is configured through environment variables; see [`.env.example`](.env.example).
 
-| Variable                          | Default                      | Description                                                                           |
-| --------------------------------- | ---------------------------- | ------------------------------------------------------------------------------------- |
-| `MOCK_LATENCY_MS`                 | `250-700` (`0` under test)   | Simulated latency per mock call (fixed or range)                                      |
-| `MOCK_TIMEOUT_DELAY_MS`           | `15000`                      | Delay of the TIMEOUT scenario                                                         |
-| `MOCK_SCENARIO_OVERRIDE`          | `enabled` outside production | Whether a forced scenario is honored                                                  |
-| `NEXT_PUBLIC_TRANSFER_TIMEOUT_MS` | `10000`                      | Client-side wait for a confirmation before its outcome is checked by key (build time) |
+| Variable                          | Default                      | Description                                                                                               |
+| --------------------------------- | ---------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `MOCK_LATENCY_MS`                 | `250-700` (`0` under test)   | Simulated latency per mock call (fixed or range)                                                          |
+| `MOCK_TIMEOUT_DELAY_MS`           | `15000`                      | Delay of the TIMEOUT scenario                                                                             |
+| `MOCK_SCENARIO_OVERRIDE`          | `enabled` outside production | Whether a forced scenario is honored                                                                      |
+| `NEXT_PUBLIC_TRANSFER_TIMEOUT_MS` | `10000`                      | Client-side wait for a confirmation before its outcome is checked by key (build time)                     |
+| `SESSION_COOKIE_SECURE`           | `true` in production         | Whether the session cookie is `Secure`; turned off only to serve a production build over plain HTTP (E2E) |
 
 ## API
 

@@ -107,6 +107,7 @@ bruno/                 Runnable API collection
 - The session can expire mid-flow. An invalid session on a page load, or a `401` on confirmation, sends the user through `/session-expired`, which clears the cookie. Redirecting straight to login would loop, since the proxy sends cookie holders back to Home.
 - The `next` parameter on login is accepted only for same-origin paths, which prevents open redirects.
 - Login and logout work without JavaScript through Server Actions.
+- A value typed or autofilled before the page is hydrated is kept: the login and amount fields are uncontrolled and are read from the form on submit, so hydration never wipes them and the client check never sees a stale empty value.
 
 **Data access**
 
@@ -142,10 +143,9 @@ bruno/                 Runnable API collection
 
 **Quality and delivery**
 
-- **Performance budgets and CI.**
+- **Performance budgets.**
   - Only the accessibility part of the performance and quality decision (axe) was implemented.
-  - Lighthouse CI budgets (LCP, INP, CLS), a bundle-size budget and Web Vitals reporting were left out because of the deadline.
-  - A GitHub Actions pipeline (lint, types, unit and E2E) was prepared but not published.
+  - Lighthouse CI budgets (LCP, INP, CLS), a bundle-size budget and Web Vitals reporting were left out because of the deadline. They would be added as jobs of the existing GitHub Actions workflow.
 - **OpenAPI generated from the Zod contracts**, served at `/api/v1/docs`. The Bruno collection could then be generated from that single source.
 - **Observability.** Structured logs, request ids and traces would be added through `instrumentation.ts`, with an error tracker on the client.
 

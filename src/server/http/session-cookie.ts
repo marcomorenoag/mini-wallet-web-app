@@ -14,12 +14,22 @@ export const readSessionToken = (request: {
   return parsed.success ? parsed.data : undefined;
 };
 
+/**
+ * The cookie is `Secure` in production. `SESSION_COOKIE_SECURE=false` lets a production build be
+ * served over plain HTTP: the E2E suite runs one on `localhost`, where WebKit on Linux drops
+ * `Secure` cookies (Chromium and Safari on macOS treat `localhost` as a secure origin).
+ */
+export const isSessionCookieSecure = (): boolean => {
+  const override = process.env.SESSION_COOKIE_SECURE;
+  return override ? override !== "false" : process.env.NODE_ENV === "production";
+};
+
 /** Shared by route handlers (`NextResponse.cookies`) and Server Actions (`cookies()`). */
 export const sessionCookieOptions = (session: Session) =>
   ({
     httpOnly: true,
     sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    secure: isSessionCookieSecure(),
     path: "/",
     expires: new Date(session.expiresAt),
   }) as const;
