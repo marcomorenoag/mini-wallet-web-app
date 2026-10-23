@@ -159,6 +159,17 @@ The diagrams were updated by the AI on the `docs/diagrams` branch:
 - A new hexagonal architecture diagram (`docs/architecture.excalidraw`) shows the domain and use cases inside the hexagon, the driving and driven ports on its edges, the Next.js adapters and the mock adapters outside it, and the composition root that binds them.
 - Both were generated as Excalidraw scenes with an SVG preview, so they can still be edited by hand at excalidraw.com.
 
+### Demo video
+
+A scripted product demo was written by the AI on the `feat/demo-video` branch, as the way to record the demo video:
+
+- A first version drove a desktop browser with Playwright. At the author's request, an iOS Simulator recording was then pursued, for the real iPhone look.
+- WebDriver automation of Safari turned out to be unavailable in the iOS 27 simulator: there is no "Remote Automation" setting, so `safaridriver` found no session.
+- The choreography was moved into an in-page player (`public/demo-player.js`) instead. The app loads it only with `DEMO_PLAYER=enabled`, and it starts on `#demo`. Two launchers use it:
+  - `make demo-ios` creates the simulator, sets the 9:41 status bar and records at native resolution;
+  - `make demo` uses a desktop browser.
+- Both were run end to end. The iPhone recording was checked frame by frame with ffmpeg.
+
 ### Accepted
 
 - Patched dependency versions and the Node 24 LTS pin.

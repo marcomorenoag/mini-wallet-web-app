@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getTranslations } from "next-intl/server";
 
+import { DemoPlayerScript } from "@/components/demo/demo-player-script";
 import { MotionProvider } from "@/components/motion/motion-provider";
 import { THEME_INIT_SCRIPT } from "@/components/theme/theme";
 
@@ -50,6 +51,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <NextIntlClientProvider>
           <MotionProvider>{children}</MotionProvider>
         </NextIntlClientProvider>
+        <DemoPlayerScript />
       </body>
     </html>
   );

@@ -11,6 +11,16 @@ A mini financial wallet built with Next.js 16 + TypeScript as a technical challe
 
 Business rules (amount > 0, amount ≤ balance, recipient required) live in a framework-agnostic domain core. They are enforced on the server behind versioned API routes (`/api/v1/*`) and reused in the UI for instant feedback.
 
+## Demo
+
+<p align="center">
+  <a href="docs/demo/mini-wallet-demo.mp4">
+    <img src="docs/demo/mini-wallet-demo.gif" width="320" alt="Mini Wallet in Safari on an iPhone: login, a transfer in three steps, a network failure retried safely, and the dark theme">
+  </a>
+</p>
+
+Recorded in Safari on a simulated iPhone 18 Pro with `make demo-ios`, shown here at 2× speed. The [full-length video](docs/demo/mini-wallet-demo.mp4) plays at the real pace.
+
 ## Design
 
 ### System design
@@ -169,6 +179,41 @@ Every endpoint is covered by a runnable [Bruno](https://www.usebruno.com) collec
   ```
 
 Pages are guarded optimistically by `src/proxy.ts`: anonymous visitors are redirected to `/login?next=…`. The session is always verified on the server.
+
+## Demo video
+
+A scripted walkthrough is recorded for a launch-style product video.
+
+- **The player** (`public/demo-player.js`) runs inside the page: it types and taps at a human pace, shows a ripple on every tap and full-screen title cards between scenes, and forces each outcome through the `mock_scenario` cookie, so every take is identical.
+- **No remote automation is needed**, so the same script runs in Safari on the iOS Simulator, where WebDriver automation is not available, and in a desktop browser.
+- **It is opt-in:** the app only loads the player when the server is started with `DEMO_PLAYER=enabled`, and it only starts on `#demo`.
+
+```bash
+make demo-server     # production build with the player and forced outcomes enabled (port 3000)
+make demo-ios        # in another terminal: records Safari on a simulated iPhone → demo-video/iphone.mov
+make demo            # or: plays it in a phone-sized desktop browser (RECORD=1 saves a draft)
+```
+
+| Scene | What is shown                                                                                    |
+| ----- | ------------------------------------------------------------------------------------------------ |
+| 1     | "Mini Wallet" title card, login as Ana, Home with the balance and movements streaming in         |
+| 2     | "Tres pasos.": amount → recipient → summary → confirmation → voucher                             |
+| 3     | "Siempre sabes qué pasó.": a network failure, retried safely with the same key, then the voucher |
+| 4     | "Claro u oscuro.": the theme switched to dark from the Home header                               |
+| 5     | Closing card                                                                                     |
+
+- **iPhone recording (`make demo-ios`):**
+  - Creates a dedicated "Mini Wallet Demo" simulator (iPhone 18 Pro by default) and sets the 9:41 status bar of Apple's product shots.
+  - Clears Safari's cookies and site data first, so no session or theme from a previous take shows up.
+  - Waits until the login page is loaded, then records at native resolution (1206×2622, H.264) with `xcrun simctl io recordVideo`. The recording stops as soon as the player signals the end.
+  - It refuses to record if the server still holds the transfers of a previous take: restart `make demo-server` between takes.
+  - It needs Xcode with an iOS Simulator runtime (`xcodebuild -downloadPlatform iOS`).
+- **Options:**
+  - `DEMO_URL`, `DEMO_SPEED` (pause multiplier, e.g. `1.5` for a slower take);
+  - `DEMO_DEVICE_TYPE` and `DEMO_OUT` for `demo-ios`;
+  - `DEMO_BROWSER=webkit` and `DEMO_HEADLESS` for `demo`.
+- **Data:** each take creates two transfers for Ana; restarting `make demo-server` resets the data.
+- **Editing:** trim the last second, after the closing card. `make demo-assets` encodes the README preview (`docs/demo/mini-wallet-demo.gif`, 2× speed) and video (`docs/demo/mini-wallet-demo.mp4`) from `demo-video/iphone.mov` with ffmpeg. The 9:16 recording fits App Store previews and social media; a 30-second cut can use scenes 1–2 and the closing card.
 
 ## Tech stack
 

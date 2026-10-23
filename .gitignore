@@ -44,6 +44,9 @@ next-env.d.ts
 */*.pdf
 
 
+# demo video drafts (make demo RECORD=1)
+/demo-video/
+
 # playwright
 /playwright-report/
 /test-results/
