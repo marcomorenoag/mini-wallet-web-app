@@ -48,6 +48,17 @@ Editable sources: [`system-design.excalidraw`](docs/system-design.excalidraw), [
 
 ## Getting started
 
+With [nvm](https://github.com/nvm-sh/nvm) installed, the Makefile takes care of the Node version:
+
+```bash
+make setup   # installs Node from .nvmrc, the npm dependencies and the E2E browsers
+make dev     # http://localhost:3000
+make check   # lint, types, formatting and unit tests
+make ci      # everything the CI pipeline runs, E2E included
+```
+
+`make` lists every command. Each one runs with the version pinned in `.nvmrc`, loaded through nvm, so `nvm use` is never needed first. Without nvm, Node 24.22.1 has to be installed by hand, and the npm scripts below are used directly:
+
 ```bash
 nvm use                                # or install the version in .nvmrc
 npm ci
@@ -176,6 +187,19 @@ Pages are guarded optimistically by `src/proxy.ts`: anonymous visitors are redir
 | `shadcn` (CLI) + `radix-ui`   | 4.x     | Components copied into `src/components/ui` (Nova style) |
 | `motion`                      | 14.x    | Animations, lazily loaded and reduced-motion aware      |
 | `next-intl`                   | 4.x     | Typed es-MX dictionary, no locale routing               |
+
+## Time invested
+
+About **14 hours** of hands-on work over two days (Oct 21–22, 2026), with Claude Code as a pair programmer (see [AI_USAGE.md](AI_USAGE.md)):
+
+| When                    | Focus                                                                                                                          | Time   |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ------ |
+| Wednesday, evening      | Reading the brief, scaffolding, requirements and capacity estimates, architecture and stack research, delivery plan            | ~4 h   |
+| Thursday, midday        | System design, wireframes and sequence diagrams; tooling, domain core, mock data and API services (phases 0–4)                 | ~2.5 h |
+| Thursday, afternoon     | Design system and theming, login, Home, the transfer flow, confirmation and voucher (phases 5–9)                               | ~2.5 h |
+| Thursday, evening–night | E2E and accessibility checks, docs and the Bruno collection, testing on a phone and the fixes it led to, CI, follow-up reviews | ~4.5 h |
+
+Every phase was reviewed and merged through its own pull request, which is included in these times.
 
 ## Known limitations
 

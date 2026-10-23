@@ -1,8 +1,15 @@
 import { toTransferOutcomeDto } from "@/contracts/v1/dto";
 import { IDEMPOTENCY_KEY_HEADER } from "@/contracts/v1/requests";
+import type { TransferOutcome } from "@/domain/transfer/transfer";
 import { authenticatedHandler } from "@/server/http/api-handler";
 import { json, problem, problemFromAppError } from "@/server/http/problem";
 import { readJson } from "@/server/http/read-json";
+
+/** HTTP status of each successful outcome; a failed one is answered with its problem details. */
+const OUTCOME_STATUS = {
+  COMPLETED: 201,
+  PENDING: 202,
+} as const satisfies Record<Exclude<TransferOutcome["status"], "FAILED">, number>;
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
@@ -24,14 +31,8 @@ export const POST = authenticatedHandler(
     if (!result.ok) return problemFromAppError(result.error);
 
     const outcome = result.value;
-    switch (outcome.status) {
-      case "COMPLETED":
-        return json(toTransferOutcomeDto(outcome), { status: 201 });
-      case "PENDING":
-        return json(toTransferOutcomeDto(outcome), { status: 202 });
-      case "FAILED":
-        return problem(outcome.code);
-    }
+    if (outcome.status === "FAILED") return problem(outcome.code);
+    return json(toTransferOutcomeDto(outcome), { status: OUTCOME_STATUS[outcome.status] });
   },
   // The scenario drives the payment network outcome instead of failing the request upfront.
   { simulateFaults: false },

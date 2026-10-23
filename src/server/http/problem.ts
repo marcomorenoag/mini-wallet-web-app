@@ -37,16 +37,18 @@ export const problem = (
   });
 };
 
-export const problemFromAppError = (error: AppError): NextResponse<ProblemDto> => {
-  switch (error.kind) {
-    case "VALIDATION":
-      return problem("VALIDATION", error.issues);
-    case "UNAUTHENTICATED":
-      return problem("UNAUTHENTICATED");
-    case "NOT_FOUND":
-      return problem("NOT_FOUND");
-  }
+/**
+ * Problem code of each application error. The application layer knows nothing about HTTP, so the
+ * translation lives here; a new error kind fails to compile until it is mapped.
+ */
+const APP_ERROR_PROBLEMS: Record<AppError["kind"], ProblemCode> = {
+  VALIDATION: "VALIDATION",
+  UNAUTHENTICATED: "UNAUTHENTICATED",
+  NOT_FOUND: "NOT_FOUND",
 };
+
+export const problemFromAppError = (error: AppError): NextResponse<ProblemDto> =>
+  problem(APP_ERROR_PROBLEMS[error.kind], error.kind === "VALIDATION" ? error.issues : undefined);
 
 export const json = <T>(body: T, init: { status?: number } = {}): NextResponse<T> =>
   NextResponse.json(body, { status: init.status ?? 200, headers: NO_STORE_HEADERS });

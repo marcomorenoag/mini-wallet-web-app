@@ -1,4 +1,4 @@
-import type { TransferProcessor } from "@/ports/transfer-processor";
+import type { ProcessTransferResult, TransferProcessor } from "@/ports/transfer-processor";
 
 import { type Latency, type Sleep, sleep } from "./latency";
 import {
@@ -18,6 +18,16 @@ interface Options {
   readonly wait?: Sleep;
 }
 
+/** Answer of the simulated payment network for each scenario. */
+const RESULTS: Record<MockScenario, ProcessTransferResult> = {
+  SUCCESS: { status: "APPROVED" },
+  // A slow approval: the client gives up first and recovers the outcome by idempotency key.
+  TIMEOUT: { status: "APPROVED" },
+  INSUFFICIENT_FUNDS: { status: "REJECTED", code: "INSUFFICIENT_FUNDS" },
+  NETWORK: { status: "REJECTED", code: "NETWORK" },
+  UNKNOWN: { status: "REJECTED", code: "UNKNOWN" },
+};
+
 /**
  * Simulated payment network. TIMEOUT is modelled as a slow approval: the response arrives after
  * the client has given up, so the outcome must be recovered through the status endpoint.
@@ -33,17 +43,7 @@ export const createMockTransferProcessor = ({
   async process() {
     await latency();
     const outcome = scenario ?? pickScenario(weights, random);
-
-    switch (outcome) {
-      case "SUCCESS":
-        return { status: "APPROVED" };
-      case "TIMEOUT":
-        await wait(timeoutDelayMs);
-        return { status: "APPROVED" };
-      case "INSUFFICIENT_FUNDS":
-      case "NETWORK":
-      case "UNKNOWN":
-        return { status: "REJECTED", code: outcome };
-    }
+    if (outcome === "TIMEOUT") await wait(timeoutDelayMs);
+    return RESULTS[outcome];
   },
 });

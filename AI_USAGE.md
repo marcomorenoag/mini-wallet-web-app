@@ -143,6 +143,14 @@ Issues reported by the author while testing on a phone were debugged and fixed b
   - A hydration race: text typed or autofilled before hydration was wiped from the controlled login and amount fields, and the client check blocked the submission. It was reproduced deterministically by holding back the app scripts in Playwright. Both fields were made uncontrolled and are read from the form on submit, with regression tests.
 - A transfer of $910 against a balance of $12,000 was rejected for insufficient funds. No balance defect was found: the mock payment network drew that outcome at random, as the brief describes. On the author's decision, it is no longer drawn at random. It is only returned when the server's balance really does not cover the amount, and the flow then fetches the current balance.
 
+### Developer experience and design review
+
+Follow-up questions from the author were answered and implemented by the AI on the `chore/dx-and-patterns` branch:
+
+- A Makefile following the "Scripts to Rule Them All" naming (`setup`, `bootstrap`, `dev`, `check`, `ci`…). Every command is run with the Node version from `.nvmrc`, loaded through nvm, and falls back to the Node on `PATH` without nvm.
+- Switch statements were reviewed: the four that only looked up a value were replaced by typed lookup tables. The ones that narrow a tagged union or run side effects were kept, since a table of functions would need type casts.
+- A "Design patterns and SOLID" section in `DECISIONS.md`, mapping each principle and pattern to the code that applies it, plus the patterns that were considered and not applied.
+
 ### Diagrams
 
 The diagrams were updated by the AI on the `docs/diagrams` branch:
@@ -177,6 +185,6 @@ The diagrams were updated by the AI on the `docs/diagrams` branch:
 - Delivery split into phases, each on its own branch and committed separately, to show progress.
 - Passive voice in all written documentation.
 - Manual and system theme modes, a single icon toggle shown on Home only, and a centralized design token file.
-- A neutral palette inspired by the Spin by OXXO brand colors (#5458C6, #F86500, #F8F8F8).
+- A neutral palette colors (#5458C6, #F86500, #F8F8F8).
 - Login submitted through a Server Action (progressive enhancement), with the API route kept for API clients.
 - Insufficient funds returned only on a real balance shortfall instead of at random, so the outcome never contradicts the balance on screen.
