@@ -129,6 +129,15 @@ The documentation was completed by the AI on the `feat/phase-11-docs` branch, st
 - A Bruno collection for every v1 endpoint, with assertions on each request. It was run twice in a row against a production build to confirm that it can be repeated.
 - README updates: the collection, the extra test tooling and the current `npm audit` findings.
 
+### Post-delivery fixes
+
+Issues reported by the author while testing on a phone were debugged and fixed by the AI on the `fix/lan-dev-access` branch:
+
+- The page was never hydrated over the local network, because the dev server rejects the HMR websocket from hosts other than `localhost`. The machine's LAN addresses were allowed as dev origins.
+- Idempotency keys could not be generated over plain HTTP, since `crypto.randomUUID` is only exposed in secure contexts. A fallback built on `crypto.getRandomValues` was added.
+- "Continuar" gave no feedback, because every wizard step was a router navigation that re-rendered the page on the server. Steps are now changed through the History API and applied instantly.
+- Links, logout and "Reintentar" showed no pending state while waiting on the network. A spinner is now shown on each of them.
+
 ### Accepted
 
 - Patched dependency versions and the Node 24 LTS pin.
