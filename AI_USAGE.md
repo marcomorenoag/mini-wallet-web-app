@@ -143,6 +143,14 @@ Issues reported by the author while testing on a phone were debugged and fixed b
   - A hydration race: text typed or autofilled before hydration was wiped from the controlled login and amount fields, and the client check blocked the submission. It was reproduced deterministically by holding back the app scripts in Playwright. Both fields were made uncontrolled and are read from the form on submit, with regression tests.
 - A transfer of $910 against a balance of $12,000 was rejected for insufficient funds. No balance defect was found: the mock payment network drew that outcome at random, as the brief describes. On the author's decision, it is no longer drawn at random. It is only returned when the server's balance really does not cover the amount, and the flow then fetches the current balance.
 
+### Diagrams
+
+The diagrams were updated by the AI on the `docs/diagrams` branch:
+
+- The wireframes now show the transfer flow as three screens (amount, recipient, summary), as built. The failure screen hangs off "Confirmar" with one primary action per error code, and a verifying state for timeouts was added.
+- A new hexagonal architecture diagram (`docs/architecture.excalidraw`) shows the domain and use cases inside the hexagon, the driving and driven ports on its edges, the Next.js adapters and the mock adapters outside it, and the composition root that binds them.
+- Both were generated as Excalidraw scenes with an SVG preview, so they can still be edited by hand at excalidraw.com.
+
 ### Accepted
 
 - Patched dependency versions and the Node 24 LTS pin.
