@@ -68,7 +68,7 @@ Vitest and Playwright refuse to start on a Node version older than the one pinne
 
 The E2E web server is started automatically on port 3100 (`E2E_PORT`) from a fresh production build, locally and in CI. The dev server is not used: under the test runner, Turbopack HMR keeps forcing full page reloads, which makes interactions flaky.
 
-Besides the user flows and the five confirmation scenarios, the E2E suite checks every screen against WCAG 2.1 AA with axe in both themes (`e2e/a11y.spec.ts`) and completes a transfer with the keyboard only (`e2e/keyboard.spec.ts`).
+Besides the user flows and the five confirmation scenarios, the E2E suite checks every screen against WCAG 2.1 AA with axe in both themes (`e2e/a11y.spec.ts`) and completes a transfer with the keyboard only (`e2e/keyboard.spec.ts`). The same checks are run by GitHub Actions on every pull request and push to `main` (`.github/workflows/ci.yml`): lint, types, formatting and unit tests, then the E2E suite on Chromium and WebKit.
 
 ## Mock data
 

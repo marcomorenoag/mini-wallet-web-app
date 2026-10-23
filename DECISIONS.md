@@ -142,10 +142,9 @@ bruno/                 Runnable API collection
 
 **Quality and delivery**
 
-- **Performance budgets and CI.**
+- **Performance budgets.**
   - Only the accessibility part of the performance and quality decision (axe) was implemented.
-  - Lighthouse CI budgets (LCP, INP, CLS), a bundle-size budget and Web Vitals reporting were left out because of the deadline.
-  - A GitHub Actions pipeline (lint, types, unit and E2E) was prepared but not published.
+  - Lighthouse CI budgets (LCP, INP, CLS), a bundle-size budget and Web Vitals reporting were left out because of the deadline. They would be added as jobs of the existing GitHub Actions workflow.
 - **OpenAPI generated from the Zod contracts**, served at `/api/v1/docs`. The Bruno collection could then be generated from that single source.
 - **Observability.** Structured logs, request ids and traces would be added through `instrumentation.ts`, with an error tracker on the client.
 

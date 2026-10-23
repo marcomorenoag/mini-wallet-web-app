@@ -120,12 +120,13 @@ The E2E suite was completed by the AI on the `feat/phase-10-e2e` branch, stacked
 - Automated WCAG 2.1 AA checks with axe on every screen and state (login errors, Home with data, empty and error states, each transfer step, the failure screen, the voucher and the not-found page), in both themes.
 - A real contrast defect was found by those checks: the primary button hover (shadcn default `bg-primary/80`) dropped white text to 3.92:1, so it was darkened instead of made translucent.
 - A keyboard-only transfer (Tab, Enter, Space and arrow keys), the skip link and the theme menu.
+- A GitHub Actions workflow running lint, types, formatting and unit tests, then the E2E suite on Chromium and WebKit. It was published after the docs phase, since pushing workflow files required an extra token scope.
 
 ### Phase 11 — Documentation
 
 The documentation was completed by the AI on the `feat/phase-11-docs` branch, stacked on the E2E branch:
 
-- The open sections of `DECISIONS.md` (project structure, UI and business logic separation, edge cases, and what would be done differently), written from the implemented code. Planned items that were not delivered (Lighthouse CI, bundle and Web Vitals budgets, the CI pipeline) are listed there instead of being presented as done.
+- The open sections of `DECISIONS.md` (project structure, UI and business logic separation, edge cases, and what would be done differently), written from the implemented code. Planned items that were not delivered (Lighthouse CI, bundle and Web Vitals budgets) are listed there instead of being presented as done.
 - A Bruno collection for every v1 endpoint, with assertions on each request. It was run twice in a row against a production build to confirm that it can be repeated.
 - README updates: the collection, the extra test tooling and the current `npm audit` findings.
 
