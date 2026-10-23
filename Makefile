@@ -17,7 +17,7 @@ NVM_SH := $(firstword $(wildcard $(NVM_DIR)/nvm.sh /opt/homebrew/opt/nvm/nvm.sh 
 NODE = $(if $(NVM_SH),. "$(NVM_SH)" --no-use && { nvm use --silent >/dev/null || { echo "Node $(NODE_VERSION) is not installed: run 'make bootstrap'." >&2; exit 1; }; } &&,)
 
 .PHONY: help node bootstrap setup dev build start lint typecheck format check test test-watch \
-	test-coverage test-e2e test-e2e-ui ci clean
+	test-coverage test-e2e test-e2e-ui ci demo clean
 
 help: ## List the available commands
 	@echo "Usage: make <command>"
@@ -80,5 +80,8 @@ test-e2e-ui: ## Run the E2E tests in Playwright's UI mode
 
 ci: check test-e2e ## Run everything the CI pipeline runs
 
+demo: ## Play the scripted product demo on a running app (RECORD=1 also saves a draft video)
+	@$(NODE) DEMO_RECORD=$(RECORD) node scripts/demo-video.mts
+
 clean: ## Remove build output, test reports and caches
-	rm -rf .next coverage playwright-report test-results tsconfig.tsbuildinfo
+	rm -rf .next coverage playwright-report test-results tsconfig.tsbuildinfo demo-video
