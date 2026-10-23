@@ -180,6 +180,19 @@ Pages are guarded optimistically by `src/proxy.ts`: anonymous visitors are redir
 | `motion`                      | 14.x    | Animations, lazily loaded and reduced-motion aware      |
 | `next-intl`                   | 4.x     | Typed es-MX dictionary, no locale routing               |
 
+## Time invested
+
+About **14 hours** of hands-on work over two days (Oct 21–22, 2026), with Claude Code as a pair programmer (see [AI_USAGE.md](AI_USAGE.md)):
+
+| When                    | Focus                                                                                                                          | Time   |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ------ |
+| Wednesday, evening      | Reading the brief, scaffolding, requirements and capacity estimates, architecture and stack research, delivery plan            | ~4 h   |
+| Thursday, midday        | System design, wireframes and sequence diagrams; tooling, domain core, mock data and API services (phases 0–4)                 | ~2.5 h |
+| Thursday, afternoon     | Design system and theming, login, Home, the transfer flow, confirmation and voucher (phases 5–9)                               | ~2.5 h |
+| Thursday, evening–night | E2E and accessibility checks, docs and the Bruno collection, testing on a phone and the fixes it led to, CI, follow-up reviews | ~4.5 h |
+
+Every phase was reviewed and merged through its own pull request, which is included in these times.
+
 ## Known limitations
 
 ### Product

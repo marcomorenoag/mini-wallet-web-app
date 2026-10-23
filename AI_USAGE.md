@@ -177,6 +177,6 @@ Follow-up questions from the author were answered and implemented by the AI on t
 - Delivery split into phases, each on its own branch and committed separately, to show progress.
 - Passive voice in all written documentation.
 - Manual and system theme modes, a single icon toggle shown on Home only, and a centralized design token file.
-- A neutral palette inspired by the Spin by OXXO brand colors (#5458C6, #F86500, #F8F8F8).
+- A neutral palette colors (#5458C6, #F86500, #F8F8F8).
 - Login submitted through a Server Action (progressive enhancement), with the API route kept for API clients.
 - Insufficient funds returned only on a real balance shortfall instead of at random, so the outcome never contradicts the balance on screen.
