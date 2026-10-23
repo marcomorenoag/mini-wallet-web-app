@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
+import { LinkPendingIcon } from "@/components/feedback/link-pending-icon";
 import { PageShell } from "@/components/layout/page-shell";
 import { Button } from "@/components/ui/button";
 import { formatFolio } from "@/features/voucher/folio";
@@ -38,7 +39,10 @@ export default async function VoucherPage({ params }: PageProps<"/voucher/[id]">
       <VoucherCard transfer={transfer} />
       <div className="flex flex-col gap-2">
         <Button asChild size="lg" className="h-11 w-full text-base">
-          <Link href={ROUTES.home}>{t("backToHome")}</Link>
+          <Link href={ROUTES.home}>
+            <LinkPendingIcon />
+            {t("backToHome")}
+          </Link>
         </Button>
         <ShareVoucherButton text={shareText} />
       </div>

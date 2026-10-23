@@ -4,6 +4,7 @@ import { CircleX, LoaderCircle } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 
+import { LinkPendingIcon } from "@/components/feedback/link-pending-icon";
 import { StatusMessage } from "@/components/layout/status-message";
 import { Button } from "@/components/ui/button";
 import type { TransferFailureCode } from "@/domain/shared/error-codes";
@@ -49,7 +50,10 @@ export function TransferFailure({
               {primary.label}
             </Button>
             <Button size="lg" variant="outline" asChild>
-              <Link href={ROUTES.home}>{tCommon("backToHome")}</Link>
+              <Link href={ROUTES.home}>
+                <LinkPendingIcon />
+                {tCommon("backToHome")}
+              </Link>
             </Button>
           </div>
         }

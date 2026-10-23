@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 
+import { LinkPendingIcon } from "@/components/feedback/link-pending-icon";
 import { Button } from "@/components/ui/button";
 import { BalanceCardSkeleton } from "@/features/home/ui/balance-card";
 import { MovementListSkeleton } from "@/features/home/ui/movement-list";
@@ -28,7 +29,7 @@ export default async function HomePage() {
 
       <Button asChild size="lg" className="h-11 text-base">
         <Link href={ROUTES.transfer}>
-          <Plus aria-hidden />
+          <LinkPendingIcon icon={<Plus aria-hidden />} />
           {t("newTransfer")}
         </Link>
       </Button>

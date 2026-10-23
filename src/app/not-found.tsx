@@ -2,6 +2,7 @@ import { SearchX } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 
+import { LinkPendingIcon } from "@/components/feedback/link-pending-icon";
 import { PageShell } from "@/components/layout/page-shell";
 import { StatusMessage } from "@/components/layout/status-message";
 import { Button } from "@/components/ui/button";
@@ -17,7 +18,10 @@ export default function NotFound() {
         description={t("notFound.description")}
         action={
           <Button asChild>
-            <Link href="/home">{t("common.backToHome")}</Link>
+            <Link href="/home">
+              <LinkPendingIcon />
+              {t("common.backToHome")}
+            </Link>
           </Button>
         }
       />
