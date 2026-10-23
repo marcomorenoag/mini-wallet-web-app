@@ -163,8 +163,12 @@ The diagrams were updated by the AI on the `docs/diagrams` branch:
 
 A scripted product demo was written by the AI on the `feat/demo-video` branch, as the way to record the demo video:
 
-- `scripts/demo-video.mts` (Playwright) plays the app on a phone-sized browser, with title cards between scenes, tap ripples, human-paced typing and forced outcomes, so every take is identical (`make demo`).
-- It was run end to end against a production build. The recorded draft was checked frame by frame with ffmpeg: video size, theme switch, both transfers on Home.
+- A first version drove a desktop browser with Playwright. At the author's request, an iOS Simulator recording was then pursued, for the real iPhone look.
+- WebDriver automation of Safari turned out to be unavailable in the iOS 27 simulator: there is no "Remote Automation" setting, so `safaridriver` found no session.
+- The choreography was moved into an in-page player (`public/demo-player.js`) instead. The app loads it only with `DEMO_PLAYER=enabled`, and it starts on `#demo`. Two launchers use it:
+  - `make demo-ios` creates the simulator, sets the 9:41 status bar and records at native resolution;
+  - `make demo` uses a desktop browser.
+- Both were run end to end. The iPhone recording was checked frame by frame with ffmpeg.
 
 ### Accepted
 

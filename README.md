@@ -172,12 +172,16 @@ Pages are guarded optimistically by `src/proxy.ts`: anonymous visitors are redir
 
 ## Demo video
 
-A scripted walkthrough (`scripts/demo-video.mts`) plays the app in a phone-sized browser so that it can be screen-recorded. It shows title cards between scenes and a ripple on every tap, types at a human pace, and forces each outcome so every take is identical.
+A scripted walkthrough is recorded for a launch-style product video.
+
+- **The player** (`public/demo-player.js`) runs inside the page: it types and taps at a human pace, shows a ripple on every tap and full-screen title cards between scenes, and forces each outcome through the `mock_scenario` cookie, so every take is identical.
+- **No remote automation is needed**, so the same script runs in Safari on the iOS Simulator, where WebDriver automation is not available, and in a desktop browser.
+- **It is opt-in:** the app only loads the player when the server is started with `DEMO_PLAYER=enabled`, and it only starts on `#demo`.
 
 ```bash
-make dev               # in another terminal (see below for a smoother production build)
-make demo              # start a screen recording of the browser window first
-make demo RECORD=1     # also saves a low-resolution draft to demo-video/, to review the timing
+make demo-server     # production build with the player and forced outcomes enabled (port 3000)
+make demo-ios        # in another terminal: records Safari on a simulated iPhone → demo-video/iphone.mov
+make demo            # or: plays it in a phone-sized desktop browser (RECORD=1 saves a draft)
 ```
 
 | Scene | What is shown                                                                                    |
@@ -188,13 +192,17 @@ make demo RECORD=1     # also saves a low-resolution draft to demo-video/, to re
 | 4     | "Claro u oscuro.": the theme switched to dark from the Home header                               |
 | 5     | Closing card                                                                                     |
 
-- **Options:** `DEMO_URL` (default `http://localhost:3000`), `DEMO_BROWSER=webkit`, `DEMO_SPEED` (pause multiplier, e.g. `1.5` for a slower take) and `DEMO_HEADLESS`.
-- **Data:** the demo creates two transfers for Ana. Restarting the server resets the data.
-- **Smoother pacing:** the dev server compiles each route on its first visit. A production build avoids those pauses: `npm run build && MOCK_SCENARIO_OVERRIDE=enabled npm start`.
-- **Recording:**
-  - QuickTime Player (File → New Screen Recording, then select the browser window) captures it at Retina resolution.
-  - Screen Studio adds automatic zooms.
-  - The `RECORD=1` draft can be converted with `ffmpeg -i demo-video/<file>.webm -c:v libx264 -pix_fmt yuv420p demo.mp4`.
+- **iPhone recording (`make demo-ios`):**
+  - Creates a dedicated "Mini Wallet Demo" simulator (iPhone 18 Pro by default) and sets the 9:41 status bar of Apple's product shots.
+  - Opens the login page in Safari, then records at native resolution (1206×2622, H.264) with `xcrun simctl io recordVideo`.
+  - The recording stops as soon as the player signals the end.
+  - It needs Xcode with an iOS Simulator runtime (`xcodebuild -downloadPlatform iOS`).
+- **Options:**
+  - `DEMO_URL`, `DEMO_SPEED` (pause multiplier, e.g. `1.5` for a slower take);
+  - `DEMO_DEVICE_TYPE` and `DEMO_OUT` for `demo-ios`;
+  - `DEMO_BROWSER=webkit` and `DEMO_HEADLESS` for `demo`.
+- **Data:** each take creates two transfers for Ana. Restarting `make demo-server` resets the data.
+- **Editing:** trim the first second, where Safari reloads the page, and the last one. The 9:16 recording fits App Store previews and social media; a 30-second cut can use scenes 1–2 and the closing card.
 
 ## Tech stack
 
