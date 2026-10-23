@@ -1,0 +1,45 @@
+meta {
+  name: Confirm a transfer
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/transfers
+  body: json
+  auth: none
+}
+
+headers {
+  Idempotency-Key: {{idempotencyKey}}
+  x-mock-scenario: SUCCESS
+}
+
+body:json {
+  {
+    "amount": { "amount": 10000, "currency": "MXN" },
+    "recipientId": "cnt_luis"
+  }
+}
+
+script:pre-request {
+  // One key per confirmation; it is reused on retries so the transfer is never applied twice.
+  bru.setVar("idempotencyKey", bru.interpolate("{{$randomUUID}}"));
+}
+
+script:post-response {
+  bru.setVar("transferId", res.getBody().transfer.id);
+}
+
+tests {
+  test("completes the transfer", function () {
+    expect(res.getStatus()).to.equal(201);
+    expect(res.getBody().status).to.equal("COMPLETED");
+    expect(res.getBody().transfer.amount).to.deep.equal({ amount: 10000, currency: "MXN" });
+  });
+}
+
+docs {
+  Amounts are sent in minor units (cents): `10000` is $100.00 MXN. The `x-mock-scenario` header forces
+  the outcome; without it, the mock payment network picks a random one.
+}

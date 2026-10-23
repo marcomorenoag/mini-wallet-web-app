@@ -1,0 +1,6 @@
+{
+  "version": "1",
+  "name": "Mini Wallet API v1",
+  "type": "collection",
+  "ignore": ["node_modules", ".git"]
+}
