@@ -1,11 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 
+import { ROUTES } from "@/lib/routes";
 import { SESSION_COOKIE } from "@/server/http/cookie-names";
-
-export const ROUTES = {
-  login: "/login",
-  home: "/home",
-} as const;
 
 /** Page prefixes that require a session. */
 const PROTECTED_PREFIXES = ["/home", "/transfer", "/voucher"] as const;
