@@ -159,6 +159,13 @@ The diagrams were updated by the AI on the `docs/diagrams` branch:
 - A new hexagonal architecture diagram (`docs/architecture.excalidraw`) shows the domain and use cases inside the hexagon, the driving and driven ports on its edges, the Next.js adapters and the mock adapters outside it, and the composition root that binds them.
 - Both were generated as Excalidraw scenes with an SVG preview, so they can still be edited by hand at excalidraw.com.
 
+### Demo video
+
+A scripted product demo was written by the AI on the `feat/demo-video` branch, as the way to record the demo video:
+
+- `scripts/demo-video.mts` (Playwright) plays the app on a phone-sized browser, with title cards between scenes, tap ripples, human-paced typing and forced outcomes, so every take is identical (`make demo`).
+- It was run end to end against a production build. The recorded draft was checked frame by frame with ffmpeg: video size, theme switch, both transfers on Home.
+
 ### Accepted
 
 - Patched dependency versions and the Node 24 LTS pin.

@@ -170,6 +170,32 @@ Every endpoint is covered by a runnable [Bruno](https://www.usebruno.com) collec
 
 Pages are guarded optimistically by `src/proxy.ts`: anonymous visitors are redirected to `/login?next=…`. The session is always verified on the server.
 
+## Demo video
+
+A scripted walkthrough (`scripts/demo-video.mts`) plays the app in a phone-sized browser so that it can be screen-recorded. It shows title cards between scenes and a ripple on every tap, types at a human pace, and forces each outcome so every take is identical.
+
+```bash
+make dev               # in another terminal (see below for a smoother production build)
+make demo              # start a screen recording of the browser window first
+make demo RECORD=1     # also saves a low-resolution draft to demo-video/, to review the timing
+```
+
+| Scene | What is shown                                                                                    |
+| ----- | ------------------------------------------------------------------------------------------------ |
+| 1     | "Mini Wallet" title card, login as Ana, Home with the balance and movements streaming in         |
+| 2     | "Tres pasos.": amount → recipient → summary → confirmation → voucher                             |
+| 3     | "Siempre sabes qué pasó.": a network failure, retried safely with the same key, then the voucher |
+| 4     | "Claro u oscuro.": the theme switched to dark from the Home header                               |
+| 5     | Closing card                                                                                     |
+
+- **Options:** `DEMO_URL` (default `http://localhost:3000`), `DEMO_BROWSER=webkit`, `DEMO_SPEED` (pause multiplier, e.g. `1.5` for a slower take) and `DEMO_HEADLESS`.
+- **Data:** the demo creates two transfers for Ana. Restarting the server resets the data.
+- **Smoother pacing:** the dev server compiles each route on its first visit. A production build avoids those pauses: `npm run build && MOCK_SCENARIO_OVERRIDE=enabled npm start`.
+- **Recording:**
+  - QuickTime Player (File → New Screen Recording, then select the browser window) captures it at Retina resolution.
+  - Screen Studio adds automatic zooms.
+  - The `RECORD=1` draft can be converted with `ffmpeg -i demo-video/<file>.webm -c:v libx264 -pix_fmt yuv420p demo.mp4`.
+
 ## Tech stack
 
 | Package                       | Version | Notes                                                   |
