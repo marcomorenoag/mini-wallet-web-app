@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { randomUUID } from "@/lib/random-uuid";
 import { ROUTES } from "@/lib/routes";
 
 import { firstIncompleteStep, TRANSFER_STEPS, type TransferStep } from "../model/transfer-flow";
@@ -73,7 +74,7 @@ export function TransferWizard() {
         onRetry={confirmation.confirm}
         onCheckStatus={confirmation.checkStatus}
         onChangeAmount={() => {
-          dispatch({ type: "NEW_ATTEMPT", idempotencyKey: crypto.randomUUID() });
+          dispatch({ type: "NEW_ATTEMPT", idempotencyKey: randomUUID() });
           confirmation.reset();
           goTo("amount");
         }}

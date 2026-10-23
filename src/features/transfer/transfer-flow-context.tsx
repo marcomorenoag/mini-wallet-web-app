@@ -4,6 +4,7 @@ import { createContext, type Dispatch, type ReactNode, useContext, useReducer } 
 
 import type { ContactDto } from "@/contracts/v1/dto";
 import type { Money } from "@/domain/money/money";
+import { randomUUID } from "@/lib/random-uuid";
 
 import {
   createDraft,
@@ -32,7 +33,7 @@ export function TransferFlowProvider({
   readonly children: ReactNode;
 }) {
   const [draft, dispatch] = useReducer(transferFlowReducer, contacts, (initial) =>
-    createDraft(initial, crypto.randomUUID()),
+    createDraft(initial, randomUUID()),
   );
 
   return (
