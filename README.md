@@ -29,7 +29,7 @@ Editable sources: [`system-design.excalidraw`](docs/system-design.excalidraw) an
 
 ### Further reading
 
-- [DECISIONS.md](DECISIONS.md): design decisions and their justification
+- [DECISIONS.md](DECISIONS.md): design decisions, project structure, edge cases and next steps
 - [AI_USAGE.md](AI_USAGE.md): how AI tools were used
 - [docs/PLAN.md](docs/PLAN.md): working plan, requirements and capacity estimates
 
@@ -131,6 +131,17 @@ curl -i -b jar -H 'content-type: application/json' \
   http://localhost:3000/api/v1/transfers
 ```
 
+### Bruno collection
+
+Every endpoint is covered by a runnable [Bruno](https://www.usebruno.com) collection in [`bruno/`](bruno). The requests run in order: a session is started as Ana, the session cookie is reused by the following requests, each confirmation scenario is forced with `x-mock-scenario`, and the session is ended last. Every request carries assertions, so the collection doubles as an API test suite.
+
+- **Bruno app:** open the `bruno/` folder as a collection, select the `local` environment and run the collection.
+- **CLI**, with the dev server running:
+
+  ```bash
+  cd bruno && npx @usebruno/cli run --env local
+  ```
+
 Pages are guarded optimistically by `src/proxy.ts`: anonymous visitors are redirected to `/login?next=…`. The session is always verified on the server.
 
 ## Tech stack
@@ -142,6 +153,8 @@ Pages are guarded optimistically by `src/proxy.ts`: anonymous visitors are redir
 | `typescript`                  | 5.9.x   | Stricter flags on top of `strict` (see `tsconfig.json`) |
 | `vitest` + Testing Library    | 5.x     | Unit and component tests (jsdom)                        |
 | `@playwright/test`            | 1.64.x  | E2E tests                                               |
+| `@axe-core/playwright`        | 4.14.x  | WCAG 2.1 AA checks in the E2E suite                     |
+| `msw`                         | 3.x     | Network mocking in component and hook tests             |
 | `zod`                         | 4.x     | Domain schemas, API contracts and inferred types        |
 | `prettier`                    | 3.x     | Formatting, integrated with ESLint                      |
 | `tailwindcss`                 | 4.3.x   | Styling via PostCSS; design tokens as CSS variables     |
@@ -151,12 +164,15 @@ Pages are guarded optimistically by `src/proxy.ts`: anonymous visitors are redir
 
 ## Known limitations
 
-### Dependencies
+### Product
 
-- **`npm audit` reports 5 high-severity findings.** They come from a single advisory ([GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm), `braces` stack-exhaustion DoS) pulled in through `eslint-config-next → @next/eslint-plugin-next → fast-glob → micromatch → braces`. It only affects lint tooling at dev time and is not in the runtime bundle. No patched `braces` release exists yet. The `npm audit fix --force` suggestion would downgrade `eslint-config-next` to 14.x, so that fix was not applied.
 - **Mock data is not persisted.** It is reset on every server restart, and it is not shared across serverless instances. A database adapter behind the same ports would be required for that.
 - **Streamed Home sections need JavaScript.** The header and logout work without it, but the balance and movements are streamed behind skeletons, which are swapped in by inline scripts.
 - **The transfer draft is kept in memory.** The step survives in the URL, but a refresh clears the amount and recipient, so the flow restarts at the amount step with a new idempotency key.
 - **Login is mocked.** No secret is verified, and unknown identifiers are reported explicitly, which would allow account enumeration in a real system.
+
+### Dependencies and tooling
+
+- **`npm audit` reports 9 high-severity findings.** They come from a single advisory ([GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm), `braces` stack-exhaustion DoS) pulled in through `fast-glob → micromatch → braces` by two dev-only tools: `eslint-config-next` and the `shadcn` CLI. Neither is in the runtime bundle. No patched `braces` release exists yet. The `npm audit fix --force` suggestion would downgrade `eslint-config-next` to 14.x, so that fix was not applied.
 - **TypeScript 7 and ESLint 10 were deliberately not adopted.** The project stays on the majors that `create-next-app@16.4.2` sets up and supports (TS 5.x, ESLint 9). ESLint 9.39 prints a "no longer supported" deprecation warning on install.
 - **The `unrs-resolver`, `fsevents`, `@parcel/watcher` and `@swc/core` install scripts are denied** (`allowScripts` in `package.json`). They are only fallbacks for building or fetching native binaries, and prebuilt binaries are already shipped. The last two are pulled in by the next-intl message extractor, which is not used.
