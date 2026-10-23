@@ -113,6 +113,14 @@ The confirmation outcomes and the voucher were implemented by the AI on the `fea
 - A server-rendered voucher by transfer id, scoped to its owner (404 otherwise), with a native share sheet or a copy fallback.
 - Unit tests for the confirmation routine, the failure paths of the wizard and the voucher, and E2E tests for all five scenarios.
 
+### Phase 10 — E2E tests
+
+The E2E suite was completed by the AI on the `feat/phase-10-e2e` branch, stacked on the voucher branch. Most flows had already been covered phase by phase, so the gaps were filled:
+
+- Automated WCAG 2.1 AA checks with axe on every screen and state (login errors, Home with data, empty and error states, each transfer step, the failure screen, the voucher and the not-found page), in both themes.
+- A real contrast defect was found by those checks: the primary button hover (shadcn default `bg-primary/80`) dropped white text to 3.92:1, so it was darkened instead of made translucent.
+- A keyboard-only transfer (Tab, Enter, Space and arrow keys), the skip link and the theme menu.
+
 ### Accepted
 
 - Patched dependency versions and the Node 24 LTS pin.
