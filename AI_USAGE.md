@@ -151,6 +151,14 @@ Follow-up questions from the author were answered and implemented by the AI on t
 - Switch statements were reviewed: the four that only looked up a value were replaced by typed lookup tables. The ones that narrow a tagged union or run side effects were kept, since a table of functions would need type casts.
 - A "Design patterns and SOLID" section in `DECISIONS.md`, mapping each principle and pattern to the code that applies it, plus the patterns that were considered and not applied.
 
+### Diagrams
+
+The diagrams were updated by the AI on the `docs/diagrams` branch:
+
+- The wireframes now show the transfer flow as three screens (amount, recipient, summary), as built. The failure screen hangs off "Confirmar" with one primary action per error code, and a verifying state for timeouts was added.
+- A new hexagonal architecture diagram (`docs/architecture.excalidraw`) shows the domain and use cases inside the hexagon, the driving and driven ports on its edges, the Next.js adapters and the mock adapters outside it, and the composition root that binds them.
+- Both were generated as Excalidraw scenes with an SVG preview, so they can still be edited by hand at excalidraw.com.
+
 ### Accepted
 
 - Patched dependency versions and the Node 24 LTS pin.

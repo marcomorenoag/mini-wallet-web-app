@@ -46,6 +46,8 @@
 
 ## Project structure
 
+The layers are drawn in the [hexagonal architecture diagram](docs/architecture.svg).
+
 Code is grouped by layer on the server side and by feature on the UI side. Dependencies only point inwards: `domain` imports nothing from the other folders, and `app` is the only folder that knows about routing.
 
 ```text

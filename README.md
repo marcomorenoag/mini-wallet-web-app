@@ -17,7 +17,15 @@ Business rules (amount > 0, amount ≤ balance, recipient required) live in a fr
 
 ![System design](docs/system-design.svg)
 
+### Architecture
+
+The hexagonal (ports and adapters) view: the domain at the center, use cases around it, Next.js as the driving side, and the mock data sources and payment network as the driven side.
+
+![Hexagonal architecture](docs/architecture.svg)
+
 ### Wireframes
+
+The transfer flow is split into its three steps (amount, recipient, summary), followed by the voucher, the failure screen and the verifying state.
 
 ![Wireframes](docs/wireframes.svg)
 
@@ -25,7 +33,7 @@ Business rules (amount > 0, amount ≤ balance, recipient required) live in a fr
 
 The full request flow, including the confirmation scenarios and idempotent retries, is in the [sequence diagram](docs/sequence-diagram.md).
 
-Editable sources: [`system-design.excalidraw`](docs/system-design.excalidraw) and [`wireframes.excalidraw`](docs/wireframes.excalidraw). Open them at [excalidraw.com](https://excalidraw.com) or in the VS Code Excalidraw extension.
+Editable sources: [`system-design.excalidraw`](docs/system-design.excalidraw), [`architecture.excalidraw`](docs/architecture.excalidraw) and [`wireframes.excalidraw`](docs/wireframes.excalidraw). Open them at [excalidraw.com](https://excalidraw.com) or in the VS Code Excalidraw extension.
 
 ### Further reading
 
