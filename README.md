@@ -194,15 +194,16 @@ make demo            # or: plays it in a phone-sized desktop browser (RECORD=1 s
 
 - **iPhone recording (`make demo-ios`):**
   - Creates a dedicated "Mini Wallet Demo" simulator (iPhone 18 Pro by default) and sets the 9:41 status bar of Apple's product shots.
-  - Opens the login page in Safari, then records at native resolution (1206×2622, H.264) with `xcrun simctl io recordVideo`.
-  - The recording stops as soon as the player signals the end.
+  - Clears Safari's cookies and site data first, so no session or theme from a previous take shows up.
+  - Waits until the login page is loaded, then records at native resolution (1206×2622, H.264) with `xcrun simctl io recordVideo`. The recording stops as soon as the player signals the end.
+  - It refuses to record if the server still holds the transfers of a previous take: restart `make demo-server` between takes.
   - It needs Xcode with an iOS Simulator runtime (`xcodebuild -downloadPlatform iOS`).
 - **Options:**
   - `DEMO_URL`, `DEMO_SPEED` (pause multiplier, e.g. `1.5` for a slower take);
   - `DEMO_DEVICE_TYPE` and `DEMO_OUT` for `demo-ios`;
   - `DEMO_BROWSER=webkit` and `DEMO_HEADLESS` for `demo`.
-- **Data:** each take creates two transfers for Ana. Restarting `make demo-server` resets the data.
-- **Editing:** trim the first second, where Safari reloads the page, and the last one. The 9:16 recording fits App Store previews and social media; a 30-second cut can use scenes 1–2 and the closing card.
+- **Data:** each take creates two transfers for Ana; restarting `make demo-server` resets the data.
+- **Editing:** trim the last second, after the closing card. The 9:16 recording fits App Store previews and social media; a 30-second cut can use scenes 1–2 and the closing card.
 
 ## Tech stack
 
