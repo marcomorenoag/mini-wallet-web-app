@@ -1,0 +1,17 @@
+meta {
+  name: Account after logout
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/v1/account
+  body: none
+  auth: none
+}
+
+tests {
+  test("is no longer authorized", function () {
+    expect(res.getStatus()).to.equal(401);
+  });
+}

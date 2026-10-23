@@ -1,0 +1,19 @@
+meta {
+  name: Movements
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/v1/account/movements?limit=20
+  body: none
+  auth: none
+}
+
+tests {
+  test("lists movements, newest first", function () {
+    expect(res.getStatus()).to.equal(200);
+    const dates = res.getBody().items.map((item) => item.createdAt);
+    expect(dates).to.deep.equal([...dates].sort().reverse());
+  });
+}

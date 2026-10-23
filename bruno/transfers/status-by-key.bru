@@ -1,0 +1,23 @@
+meta {
+  name: Status by idempotency key
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/v1/transfers?idempotencyKey={{idempotencyKey}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("reports the outcome of the confirmation", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().status).to.equal("COMPLETED");
+  });
+}
+
+docs {
+  Used by the client after a timeout: the outcome is unknown, so it is looked up by key instead of
+  the transfer being sent again.
+}

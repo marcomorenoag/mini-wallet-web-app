@@ -1,0 +1,10 @@
+docs {
+  # Mini Wallet API v1
+
+  Requests are run in order: a session is started as Ana (`ana@example.com`), the session cookie is
+  kept by Bruno and sent with every following request, and the session is ended last.
+
+  Outcomes of the mock payment network are random, so a scenario is forced with the
+  `x-mock-scenario` header wherever a specific outcome is asserted. Overrides are honored outside
+  production (`MOCK_SCENARIO_OVERRIDE`).
+}

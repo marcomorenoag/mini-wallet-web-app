@@ -1,0 +1,25 @@
+meta {
+  name: Missing idempotency key
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{baseUrl}}/api/v1/transfers
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "amount": { "amount": 100, "currency": "MXN" },
+    "recipientId": "cnt_luis"
+  }
+}
+
+tests {
+  test("is rejected as a validation error", function () {
+    expect(res.getStatus()).to.equal(422);
+    expect(res.getBody().issues).to.deep.equal([{ field: "idempotencyKey", code: "INVALID" }]);
+  });
+}

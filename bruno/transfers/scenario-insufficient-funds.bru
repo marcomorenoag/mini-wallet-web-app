@@ -1,0 +1,35 @@
+meta {
+  name: Forced INSUFFICIENT_FUNDS
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/api/v1/transfers
+  body: json
+  auth: none
+}
+
+headers {
+  Idempotency-Key: {{idempotencyKey}}
+  x-mock-scenario: INSUFFICIENT_FUNDS
+}
+
+body:json {
+  {
+    "amount": { "amount": 100, "currency": "MXN" },
+    "recipientId": "cnt_luis"
+  }
+}
+
+script:pre-request {
+  // One key per confirmation; it is reused on retries so the transfer is never applied twice.
+  bru.setVar("idempotencyKey", bru.interpolate("{{$randomUUID}}"));
+}
+
+tests {
+  test("fails with INSUFFICIENT_FUNDS problem details", function () {
+    expect(res.getStatus()).to.equal(422);
+    expect(res.getBody().code).to.equal("INSUFFICIENT_FUNDS");
+  });
+}
