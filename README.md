@@ -62,6 +62,8 @@ npm run dev                            # http://localhost:3000
 | `npm run test:e2e`      | E2E tests (Playwright: desktop Chrome, mobile Safari) |
 | `npm run test:e2e:ui`   | E2E tests in Playwright UI mode                       |
 
+To try the app on a phone, the dev server is opened at `http://<laptop LAN IP>:3000` (printed as "Network" by `npm run dev`) while both devices are on the same network. The LAN addresses of the machine are allowed in `allowedDevOrigins`, since the dev server otherwise rejects the HMR connection and the page is never hydrated.
+
 Vitest and Playwright refuse to start on a Node version older than the one pinned in `.nvmrc`, since jsdom crashes with an obscure `undici` error otherwise; `nvm use` fixes it.
 
 The E2E web server is started automatically on port 3100 (`E2E_PORT`) from a fresh production build, locally and in CI. The dev server is not used: under the test runner, Turbopack HMR keeps forcing full page reloads, which makes interactions flaky.
