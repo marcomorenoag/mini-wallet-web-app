@@ -11,6 +11,16 @@ A mini financial wallet built with Next.js 16 + TypeScript as a technical challe
 
 Business rules (amount > 0, amount ≤ balance, recipient required) live in a framework-agnostic domain core. They are enforced on the server behind versioned API routes (`/api/v1/*`) and reused in the UI for instant feedback.
 
+## Demo
+
+<p align="center">
+  <a href="docs/demo/mini-wallet-demo.mp4">
+    <img src="docs/demo/mini-wallet-demo.gif" width="320" alt="Mini Wallet in Safari on an iPhone: login, a transfer in three steps, a network failure retried safely, and the dark theme">
+  </a>
+</p>
+
+Recorded in Safari on a simulated iPhone 18 Pro with `make demo-ios`, shown here at 2× speed. The [full-length video](docs/demo/mini-wallet-demo.mp4) plays at the real pace.
+
 ## Design
 
 ### System design
@@ -203,7 +213,7 @@ make demo            # or: plays it in a phone-sized desktop browser (RECORD=1 s
   - `DEMO_DEVICE_TYPE` and `DEMO_OUT` for `demo-ios`;
   - `DEMO_BROWSER=webkit` and `DEMO_HEADLESS` for `demo`.
 - **Data:** each take creates two transfers for Ana; restarting `make demo-server` resets the data.
-- **Editing:** trim the last second, after the closing card. The 9:16 recording fits App Store previews and social media; a 30-second cut can use scenes 1–2 and the closing card.
+- **Editing:** trim the last second, after the closing card. `make demo-assets` encodes the README preview (`docs/demo/mini-wallet-demo.gif`, 2× speed) and video (`docs/demo/mini-wallet-demo.mp4`) from `demo-video/iphone.mov` with ffmpeg. The 9:16 recording fits App Store previews and social media; a 30-second cut can use scenes 1–2 and the closing card.
 
 ## Tech stack
 
