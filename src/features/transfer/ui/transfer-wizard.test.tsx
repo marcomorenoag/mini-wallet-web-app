@@ -66,6 +66,12 @@ const goToSummary = async (user: ReturnType<typeof userEvent.setup>) => {
   await user.click(continueButton());
 };
 
+/** Balance lookup made after an insufficient-funds rejection. */
+const accountResponse = (amount: number) =>
+  http.get(apiPath("/account"), () =>
+    HttpResponse.json({ userName: "Ana López", balance: { amount, currency: "MXN" } }),
+  );
+
 const problemResponse = (code: string, status: number) =>
   HttpResponse.json({ type: "about:blank", title: code, status, code }, { status });
 
@@ -232,6 +238,25 @@ describe("TransferWizard", () => {
     expect(keys[0]).toBe(keys[1]);
   });
 
+  it("replaces a stale balance after an insufficient-funds rejection", async () => {
+    const user = userEvent.setup();
+    server.use(
+      http.post(apiPath("/transfers"), () => problemResponse("INSUFFICIENT_FUNDS", 422)),
+      // The balance was spent elsewhere after the flow was opened.
+      accountResponse(10_000),
+    );
+    renderWizard();
+    await goToSummary(user);
+
+    await user.click(screen.getByRole("button", { name: "Confirmar" }));
+    await screen.findByText(/Tu saldo no alcanza/);
+    await user.click(screen.getByRole("button", { name: "Cambiar monto" }));
+
+    expect(await screen.findByText("Saldo disponible: $100.00")).toBeInTheDocument();
+    await user.click(continueButton());
+    expect(screen.getByText("El monto supera tu saldo.")).toBeInTheDocument();
+  });
+
   it("sends an insufficient-funds failure back to the amount with a new key", async () => {
     const user = userEvent.setup();
     const keys: (string | null)[] = [];
@@ -240,6 +265,7 @@ describe("TransferWizard", () => {
         keys.push(request.headers.get("Idempotency-Key"));
         return problemResponse("INSUFFICIENT_FUNDS", 422);
       }),
+      accountResponse(1_250_000),
     );
     renderWizard();
     await goToSummary(user);

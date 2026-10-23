@@ -1,6 +1,10 @@
 import type { z } from "zod";
 
-import { ContactDtoSchema, TransferOutcomeDtoSchema } from "@/contracts/v1/dto";
+import {
+  AccountOverviewDtoSchema,
+  ContactDtoSchema,
+  TransferOutcomeDtoSchema,
+} from "@/contracts/v1/dto";
 import { ProblemDtoSchema, type ProblemCode } from "@/contracts/v1/problem";
 import {
   API_V1_BASE_PATH,
@@ -45,6 +49,10 @@ const request = async <S extends z.ZodType>(
   const problem = ProblemDtoSchema.safeParse(body);
   return problem.success ? failure(problem.data.code, problem.data.issues) : failure("UNKNOWN");
 };
+
+/** Current balance, used to replace a stale one after the server rejects an amount. */
+export const getAccountOverview = () =>
+  request("/account", { method: "GET" }, AccountOverviewDtoSchema);
 
 export const createContact = (input: CreateContactRequest) =>
   request("/contacts", { method: "POST", body: JSON.stringify(input) }, ContactDtoSchema);
