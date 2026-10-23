@@ -6,7 +6,8 @@
  *
  * Loaded only when the server is started with DEMO_PLAYER=enabled (see `make demo-server`), and
  * started only by `#demo` in the URL (on load, or when the hash changes to it). Hash options: `speed=1.5` (slower pauses) and
- * `done=<port>` (pinged on localhost when the demo ends, so a recorder can stop).
+ * `done=<port>` (pinged on localhost when the demo ends, so a recorder can stop). Opening the page
+ * with `#ready=<port>` pings that port once the page is loaded, without starting the demo.
  */
 (() => {
   if (window.__demoPlayer) return;
@@ -236,7 +237,17 @@
     window.__demoPlayer.started = true;
     run(options);
   };
+  /** Lets a recorder know that the page is loaded, so the recording starts on a ready page. */
+  const signalReady = () => {
+    const port = new URLSearchParams(location.hash.slice(1)).get("ready");
+    if (port) fetch(`http://localhost:${port}/ready`, { mode: "no-cors" }).catch(() => {});
+  };
+
+  const onLoad = () => {
+    signalReady();
+    begin();
+  };
   addEventListener("hashchange", begin);
-  if (document.readyState === "complete") begin();
-  else addEventListener("load", begin, { once: true });
+  if (document.readyState === "complete") onLoad();
+  else addEventListener("load", onLoad, { once: true });
 })();

@@ -23,6 +23,15 @@ fail() { echo "demo-ios: $*" >&2; exit 1; }
 command -v xcrun >/dev/null || fail "Xcode is required (xcrun was not found)."
 curl -sf "$URL/api/health" >/dev/null || fail "No server at $URL: start it with 'make demo-server'."
 
+# A take starts from the seeded data (Ana: $12,500.00); every take leaves two transfers behind.
+JAR="$(mktemp)"
+curl -sf -c "$JAR" -H 'content-type: application/json' -d '{"identifier":"ana@example.com"}' \
+  "$URL/api/v1/auth/login" >/dev/null || fail "Signing in as Ana failed at $URL."
+BALANCE="$(curl -sf -b "$JAR" "$URL/api/v1/account" | python3 -c 'import json, sys; print(json.load(sys.stdin)["balance"]["amount"])')"
+rm -f "$JAR"
+[ "$BALANCE" = "1250000" ] ||
+  fail "The server still has the transfers of a previous take: restart 'make demo-server' first."
+
 device_udid() {
   xcrun simctl list devices | grep -F "    $DEVICE_NAME (" | head -1 | sed -E 's/.*\(([0-9A-F-]{36})\).*/\1/'
 }
@@ -41,26 +50,28 @@ fi
 
 xcrun simctl boot "$UDID" 2>/dev/null || true
 xcrun simctl bootstatus "$UDID" -b >/dev/null
+
+# Safari starts without the session or theme of a previous take. Its cookies and website data
+# are removed while the simulator is shut down, so no process keeps them in memory.
+SAFARI_DATA="$(xcrun simctl get_app_container "$UDID" com.apple.mobilesafari data 2>/dev/null || true)"
+if [ -n "$SAFARI_DATA" ]; then
+  xcrun simctl shutdown "$UDID"
+  rm -rf "$SAFARI_DATA/Library/Cookies" "$SAFARI_DATA/Library/WebKit/com.apple.mobilesafari/WebsiteData"
+  xcrun simctl boot "$UDID"
+  xcrun simctl bootstatus "$UDID" -b >/dev/null
+fi
+
+# Status bar overrides do not survive a reboot, so they are applied last.
 xcrun simctl status_bar "$UDID" override --time 9:41 --dataNetwork wifi --wifiMode active \
   --wifiBars 3 --cellularMode active --cellularBars 4 --batteryState charged --batteryLevel 100
 xcrun simctl ui "$UDID" appearance light
 
-# A clean first frame: no app left in front (and no "◀ Settings" back link), Safari on the login
-# page. The demo is started later by switching to `#demo`, once the recording is running.
-for app in com.apple.Preferences com.apple.mobilesafari; do
-  xcrun simctl terminate "$UDID" "$app" 2>/dev/null || true
-done
-xcrun simctl openurl "$UDID" "$URL/login"
-sleep 4
-
-# The simulator window (Simulator.app, or DeviceHub in newer Xcode versions) is only for watching.
-for app in Simulator DeviceHub; do open -a "$app" 2>/dev/null && break; done || true
-
-# The player pings this one-shot listener when it ends, so the recording stops right after.
-python3 - "$DONE_PORT" <<'PY' &
+# The player pings a one-shot local listener: when the page is ready, and when the demo ends.
+listen_once() {
+  python3 - "$DONE_PORT" <<'PY' &
 import http.server, sys
 
-class Done(http.server.BaseHTTPRequestHandler):
+class Ping(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(204)
         self.end_headers()
@@ -68,28 +79,46 @@ class Done(http.server.BaseHTTPRequestHandler):
     def log_message(self, *args):
         pass
 
-http.server.HTTPServer(("127.0.0.1", int(sys.argv[1])), Done).handle_request()
+http.server.HTTPServer(("127.0.0.1", int(sys.argv[1])), Ping).handle_request()
 PY
-LISTENER=$!
+  LISTENER=$!
+}
+
+# Waits for the ping, up to a number of seconds; fails (status 1) if it never arrives.
+wait_for_ping() {
+  for ((elapsed = 0; elapsed < $1; elapsed++)); do
+    kill -0 "$LISTENER" 2>/dev/null || return 0
+    sleep 1
+  done
+  kill "$LISTENER" 2>/dev/null || true
+  return 1
+}
+
+# A clean first frame: no app left in front (and no "◀ Settings" back link), and Safari showing
+# the loaded login page before the recording starts.
+for app in com.apple.Preferences com.apple.mobilesafari; do
+  xcrun simctl terminate "$UDID" "$app" 2>/dev/null || true
+done
+# The simulator window (Simulator.app, or DeviceHub in newer Xcode versions) is only for watching.
+for app in Simulator DeviceHub; do open -a "$app" 2>/dev/null && break; done || true
+
+listen_once
+xcrun simctl openurl "$UDID" "$URL/login#ready=$DONE_PORT"
+wait_for_ping 90 || fail "Safari did not load $URL/login on the simulator."
+sleep 1
 
 mkdir -p "$(dirname "$OUT")"
+listen_once
 xcrun simctl io "$UDID" recordVideo --codec=h264 --force "$OUT" >/dev/null 2>&1 &
 RECORDER=$!
 sleep 2
 
+# Only the hash changes, so the page is not reloaded: the player starts on `hashchange`.
 echo "Recording $DEVICE_NAME → $OUT (stops when the demo ends, or after ${TIMEOUT}s)..."
 xcrun simctl openurl "$UDID" "$URL/login#demo&speed=$SPEED&done=$DONE_PORT"
 
-# Waits for the ping, up to the timeout.
 STATUS=0
-for ((elapsed = 0; elapsed < TIMEOUT; elapsed++)); do
-  kill -0 "$LISTENER" 2>/dev/null || break
-  sleep 1
-done
-if kill -0 "$LISTENER" 2>/dev/null; then
-  kill "$LISTENER" 2>/dev/null || true
-  STATUS=1
-fi
+wait_for_ping "$TIMEOUT" || STATUS=1
 sleep 1
 kill -INT "$RECORDER"
 wait "$RECORDER" 2>/dev/null || true
