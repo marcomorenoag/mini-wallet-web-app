@@ -1,9 +1,9 @@
 import { LogOut } from "lucide-react";
 import { useTranslations } from "next-intl";
 
+import { SubmitButton } from "@/components/feedback/submit-button";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 
 import { logoutAction } from "../actions";
 
@@ -24,10 +24,9 @@ export function HomeHeader({ userName }: { readonly userName: string }) {
       </h1>
       <ThemeToggle />
       <form action={logoutAction}>
-        <Button type="submit" variant="ghost" size="sm">
-          <LogOut aria-hidden />
+        <SubmitButton variant="ghost" size="sm" icon={<LogOut aria-hidden />}>
           {t("logout")}
-        </Button>
+        </SubmitButton>
       </form>
     </>
   );

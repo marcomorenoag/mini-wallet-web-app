@@ -4,6 +4,7 @@ import { LoaderCircle } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 
+import { LinkPendingIcon } from "@/components/feedback/link-pending-icon";
 import { Button } from "@/components/ui/button";
 import { zero } from "@/domain/money/money";
 import { formatMoney, formatPhone } from "@/i18n/format";
@@ -69,7 +70,10 @@ export function SummaryStep({ pending, onConfirm }: SummaryStepProps) {
         </Button>
         {pending ? null : (
           <Button asChild variant="ghost" size="lg" className="h-11 w-full text-base">
-            <Link href={ROUTES.home}>{t("cancel")}</Link>
+            <Link href={ROUTES.home}>
+              <LinkPendingIcon />
+              {t("cancel")}
+            </Link>
           </Button>
         )}
       </div>

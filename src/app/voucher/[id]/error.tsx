@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useEffect } from "react";
 
+import { LinkPendingIcon } from "@/components/feedback/link-pending-icon";
+import { RetryButton } from "@/components/feedback/retry-button";
 import { PageShell } from "@/components/layout/page-shell";
 import { StatusMessage } from "@/components/layout/status-message";
 import { Button } from "@/components/ui/button";
@@ -26,9 +28,12 @@ export default function VoucherError({ error, retry }: { error: unknown; retry: 
         action={
           <div className="flex gap-2">
             <Button variant="outline" asChild>
-              <Link href={ROUTES.home}>{t("common.backToHome")}</Link>
+              <Link href={ROUTES.home}>
+                <LinkPendingIcon />
+                {t("common.backToHome")}
+              </Link>
             </Button>
-            <Button onClick={retry}>{t("common.retry")}</Button>
+            <RetryButton retry={retry} />
           </div>
         }
       />

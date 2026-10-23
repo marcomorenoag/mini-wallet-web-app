@@ -10,7 +10,7 @@ import { renderWithIntl } from "@/test/render-with-intl";
 import { TransferFlowProvider } from "../transfer-flow-context";
 import { TransferWizard } from "./transfer-wizard";
 
-// In-memory router: `?step=` changes re-render the wizard like a client-side navigation.
+// In-memory URL: `?step=` changes re-render the wizard like a client-side navigation.
 const nav = vi.hoisted(() => {
   let url = "/transfer";
   const listeners = new Set<() => void>();
@@ -66,6 +66,12 @@ const goToSummary = async (user: ReturnType<typeof userEvent.setup>) => {
   await user.click(continueButton());
 };
 
+/** Balance lookup made after an insufficient-funds rejection. */
+const accountResponse = (amount: number) =>
+  http.get(apiPath("/account"), () =>
+    HttpResponse.json({ userName: "Ana López", balance: { amount, currency: "MXN" } }),
+  );
+
 const problemResponse = (code: string, status: number) =>
   HttpResponse.json({ type: "about:blank", title: code, status, code }, { status });
 
@@ -86,6 +92,10 @@ const completedResponse = (idempotencyKey: string | null) =>
 
 beforeEach(() => {
   nav.go("/transfer");
+  // Steps are changed through the History API, which Next.js syncs with `useSearchParams`.
+  const toNav = (_state: unknown, _title: string, url?: string | URL | null) => nav.go(String(url));
+  vi.spyOn(window.history, "pushState").mockImplementation(toNav);
+  vi.spyOn(window.history, "replaceState").mockImplementation(toNav);
 });
 
 describe("TransferWizard", () => {
@@ -134,6 +144,15 @@ describe("TransferWizard", () => {
     await user.click(screen.getByRole("button", { name: "Confirmar" }));
     await waitFor(() => expect(nav.url).toBe("/voucher/trf_1"));
     expect(idempotencyKey).toMatch(/^[0-9a-f-]{36}$/);
+  });
+
+  it("changes steps through the History API, without a server navigation", async () => {
+    const user = userEvent.setup();
+    renderWizard();
+
+    await fillAmountAndContinue(user, "250");
+    expect(window.history.pushState).toHaveBeenCalledWith(null, "", "/transfer?step=recipient");
+    expect(screen.getByText("Paso 2 de 3")).toBeInTheDocument();
   });
 
   it("saves a new contact and selects it", async () => {
@@ -219,6 +238,25 @@ describe("TransferWizard", () => {
     expect(keys[0]).toBe(keys[1]);
   });
 
+  it("replaces a stale balance after an insufficient-funds rejection", async () => {
+    const user = userEvent.setup();
+    server.use(
+      http.post(apiPath("/transfers"), () => problemResponse("INSUFFICIENT_FUNDS", 422)),
+      // The balance was spent elsewhere after the flow was opened.
+      accountResponse(10_000),
+    );
+    renderWizard();
+    await goToSummary(user);
+
+    await user.click(screen.getByRole("button", { name: "Confirmar" }));
+    await screen.findByText(/Tu saldo no alcanza/);
+    await user.click(screen.getByRole("button", { name: "Cambiar monto" }));
+
+    expect(await screen.findByText("Saldo disponible: $100.00")).toBeInTheDocument();
+    await user.click(continueButton());
+    expect(screen.getByText("El monto supera tu saldo.")).toBeInTheDocument();
+  });
+
   it("sends an insufficient-funds failure back to the amount with a new key", async () => {
     const user = userEvent.setup();
     const keys: (string | null)[] = [];
@@ -227,6 +265,7 @@ describe("TransferWizard", () => {
         keys.push(request.headers.get("Idempotency-Key"));
         return problemResponse("INSUFFICIENT_FUNDS", 422);
       }),
+      accountResponse(1_250_000),
     );
     renderWizard();
     await goToSummary(user);

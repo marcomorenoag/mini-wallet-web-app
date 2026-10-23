@@ -1,9 +1,17 @@
 "use client";
 
-import { createContext, type Dispatch, type ReactNode, useContext, useReducer } from "react";
+import {
+  createContext,
+  type Dispatch,
+  type ReactNode,
+  useContext,
+  useReducer,
+  useState,
+} from "react";
 
 import type { ContactDto } from "@/contracts/v1/dto";
 import type { Money } from "@/domain/money/money";
+import { randomUUID } from "@/lib/random-uuid";
 
 import {
   createDraft,
@@ -17,13 +25,15 @@ interface TransferFlowValue {
   readonly dispatch: Dispatch<TransferAction>;
   /** Balance read when the flow was opened; the server re-checks it on confirmation. */
   readonly balance: Money;
+  /** Replaces the balance when the server reports that it changed (e.g. spent elsewhere). */
+  readonly updateBalance: (balance: Money) => void;
 }
 
 const TransferFlowContext = createContext<TransferFlowValue | null>(null);
 
 /** Client state of the transfer flow, scoped to the transfer route only. */
 export function TransferFlowProvider({
-  balance,
+  balance: initialBalance,
   contacts,
   children,
 }: {
@@ -32,11 +42,12 @@ export function TransferFlowProvider({
   readonly children: ReactNode;
 }) {
   const [draft, dispatch] = useReducer(transferFlowReducer, contacts, (initial) =>
-    createDraft(initial, crypto.randomUUID()),
+    createDraft(initial, randomUUID()),
   );
+  const [balance, updateBalance] = useState(initialBalance);
 
   return (
-    <TransferFlowContext.Provider value={{ draft, dispatch, balance }}>
+    <TransferFlowContext.Provider value={{ draft, dispatch, balance, updateBalance }}>
       {children}
     </TransferFlowContext.Provider>
   );

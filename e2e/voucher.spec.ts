@@ -58,6 +58,37 @@ test.describe("confirmation and voucher", () => {
     await expect(page.getByLabel("Monto")).toHaveValue("100");
   });
 
+  test("INSUFFICIENT_FUNDS happens when the balance was spent elsewhere, and it is reloaded", async ({
+    page,
+  }) => {
+    await signIn(page, "diana@example.com");
+    await page.goto("/transfer");
+    const shown = page.getByText(/^Saldo disponible: /);
+    const before = (await shown.textContent()) ?? "";
+    // The whole balance passes the check in the browser.
+    await page.getByLabel("Monto").fill(before.replace(/[^\d.]/g, ""));
+    await page.getByRole("button", { name: "Continuar" }).click();
+    await page.getByText("Luis Pérez").click();
+    await page.getByRole("button", { name: "Continuar" }).click();
+    await expect(page).toHaveURL(/\?step=summary$/);
+
+    // Meanwhile, money is spent "from another device" with the same session.
+    const debit = await page.request.post("/api/v1/transfers", {
+      headers: { "Idempotency-Key": crypto.randomUUID(), "x-mock-scenario": "SUCCESS" },
+      data: { amount: { amount: 100, currency: "MXN" }, recipientId: "cnt_diana_luis" },
+    });
+    expect(debit.status()).toBe(201);
+
+    // No scenario is forced: the server rejects the amount against the current balance.
+    await page.getByRole("button", { name: "Confirmar" }).click();
+    await expect(failure(page)).toContainText("Tu saldo no alcanza para esta transferencia.");
+
+    await page.getByRole("button", { name: "Cambiar monto" }).click();
+    await expect(shown).not.toHaveText(before);
+    await page.getByRole("button", { name: "Continuar" }).click();
+    await expect(page.getByText("El monto supera tu saldo.")).toBeVisible();
+  });
+
   test("NETWORK can be retried safely with the same key", async ({ page }) => {
     await reachSummary(page);
     await confirmWith(page, "NETWORK");

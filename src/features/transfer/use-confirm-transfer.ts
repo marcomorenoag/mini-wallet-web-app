@@ -7,7 +7,7 @@ import { toMoneyDto } from "@/contracts/v1/dto";
 import type { TransferFailureCode } from "@/domain/shared/error-codes";
 import { ROUTES } from "@/lib/routes";
 
-import { createTransfer, getTransferStatus } from "./api";
+import { createTransfer, getAccountOverview, getTransferStatus } from "./api";
 import { type ConfirmDeps, confirmTransfer, verifyTransfer } from "./model/confirm-transfer";
 import { checkAmount, selectedRecipient } from "./model/transfer-flow";
 import { useTransferFlow } from "./transfer-flow-context";
@@ -27,7 +27,7 @@ const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, 
 
 /** Confirmation of the current draft: submit, recover unknown outcomes, and route the result. */
 export function useConfirmTransfer() {
-  const { draft, balance } = useTransferFlow();
+  const { draft, balance, updateBalance } = useTransferFlow();
   const router = useRouter();
   const [state, setState] = useState<ConfirmationState>({ status: "idle" });
   const mounted = useRef(false);
@@ -38,6 +38,14 @@ export function useConfirmTransfer() {
       mounted.current = false;
     };
   }, []);
+
+  // The balance on screen was stale (e.g. spent from another device), so the current one is
+  // fetched for the amount step. A router refresh is not used: it would restore the URL of the
+  // step it was started on, undoing the client-side step change.
+  const refreshBalance = useCallback(async () => {
+    const result = await getAccountOverview();
+    if (result.ok && mounted.current) updateBalance(result.data.balance);
+  }, [updateBalance]);
 
   const run = useCallback(
     async (mode: "submit" | "verify") => {
@@ -76,10 +84,11 @@ export function useConfirmTransfer() {
           window.location.assign(ROUTES.sessionExpired);
           return;
         case "FAILED":
+          if (result.code === "INSUFFICIENT_FUNDS") void refreshBalance();
           setState({ status: "failed", code: result.code });
       }
     },
-    [draft, balance, router],
+    [draft, balance, router, refreshBalance],
   );
 
   return {

@@ -11,10 +11,15 @@ export type MockScenario = (typeof MOCK_SCENARIOS)[number];
 
 export type ScenarioWeights = Readonly<Record<MockScenario, number>>;
 
-/** Success is the most likely outcome; every failure path remains reachable at random. */
+/**
+ * Success is the most likely outcome, and network, timeout and unknown failures are reachable at
+ * random. Insufficient funds is never drawn: a random rejection would contradict the balance on
+ * screen, so it only happens when the server's balance really does not cover the amount (e.g. it
+ * was spent from another device after the flow was opened) or when it is forced for testing.
+ */
 export const DEFAULT_SCENARIO_WEIGHTS: ScenarioWeights = {
-  SUCCESS: 60,
-  INSUFFICIENT_FUNDS: 10,
+  SUCCESS: 70,
+  INSUFFICIENT_FUNDS: 0,
   NETWORK: 10,
   TIMEOUT: 10,
   UNKNOWN: 10,

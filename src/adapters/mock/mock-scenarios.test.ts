@@ -18,13 +18,18 @@ describe("parseMockScenario", () => {
 
 describe("pickScenario", () => {
   it("maps the random value onto the cumulative weights", () => {
-    // Default weights: SUCCESS 60, INSUFFICIENT_FUNDS 10, NETWORK 10, TIMEOUT 10, UNKNOWN 10.
+    // Default weights: SUCCESS 70, INSUFFICIENT_FUNDS 0, NETWORK 10, TIMEOUT 10, UNKNOWN 10.
     expect(pickScenario(DEFAULT_SCENARIO_WEIGHTS, () => 0)).toBe("SUCCESS");
-    expect(pickScenario(DEFAULT_SCENARIO_WEIGHTS, () => 0.59)).toBe("SUCCESS");
-    expect(pickScenario(DEFAULT_SCENARIO_WEIGHTS, () => 0.6)).toBe("INSUFFICIENT_FUNDS");
-    expect(pickScenario(DEFAULT_SCENARIO_WEIGHTS, () => 0.75)).toBe("NETWORK");
+    expect(pickScenario(DEFAULT_SCENARIO_WEIGHTS, () => 0.69)).toBe("SUCCESS");
+    expect(pickScenario(DEFAULT_SCENARIO_WEIGHTS, () => 0.7)).toBe("NETWORK");
     expect(pickScenario(DEFAULT_SCENARIO_WEIGHTS, () => 0.85)).toBe("TIMEOUT");
     expect(pickScenario(DEFAULT_SCENARIO_WEIGHTS, () => 0.999)).toBe("UNKNOWN");
+  });
+
+  it("never draws insufficient funds by default, so it cannot contradict the balance", () => {
+    for (let r = 0; r < 1; r += 0.001) {
+      expect(pickScenario(DEFAULT_SCENARIO_WEIGHTS, () => r)).not.toBe("INSUFFICIENT_FUNDS");
+    }
   });
 
   it("never picks a zero-weight scenario", () => {
