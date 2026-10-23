@@ -39,6 +39,8 @@ export default defineConfig({
     env: {
       // Scenario overrides are disabled in production builds by default; E2E tests rely on them.
       MOCK_SCENARIO_OVERRIDE: "enabled",
+      // The build is served over plain HTTP, where WebKit on Linux (CI) drops `Secure` cookies.
+      SESSION_COOKIE_SECURE: "false",
       // Faster mocks keep a normal confirmation well under the client timeout, while the client
       // still gives up before the slow (TIMEOUT) approval completes, so recovery by idempotency
       // key is exercised in seconds instead of the default 10 s / 15 s.

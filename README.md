@@ -88,12 +88,13 @@ The TIMEOUT outcome is modelled as a slow approval, so the result has to be reco
 
 The mock behavior is configured through environment variables; see [`.env.example`](.env.example).
 
-| Variable                          | Default                      | Description                                                                           |
-| --------------------------------- | ---------------------------- | ------------------------------------------------------------------------------------- |
-| `MOCK_LATENCY_MS`                 | `250-700` (`0` under test)   | Simulated latency per mock call (fixed or range)                                      |
-| `MOCK_TIMEOUT_DELAY_MS`           | `15000`                      | Delay of the TIMEOUT scenario                                                         |
-| `MOCK_SCENARIO_OVERRIDE`          | `enabled` outside production | Whether a forced scenario is honored                                                  |
-| `NEXT_PUBLIC_TRANSFER_TIMEOUT_MS` | `10000`                      | Client-side wait for a confirmation before its outcome is checked by key (build time) |
+| Variable                          | Default                      | Description                                                                                               |
+| --------------------------------- | ---------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `MOCK_LATENCY_MS`                 | `250-700` (`0` under test)   | Simulated latency per mock call (fixed or range)                                                          |
+| `MOCK_TIMEOUT_DELAY_MS`           | `15000`                      | Delay of the TIMEOUT scenario                                                                             |
+| `MOCK_SCENARIO_OVERRIDE`          | `enabled` outside production | Whether a forced scenario is honored                                                                      |
+| `NEXT_PUBLIC_TRANSFER_TIMEOUT_MS` | `10000`                      | Client-side wait for a confirmation before its outcome is checked by key (build time)                     |
+| `SESSION_COOKIE_SECURE`           | `true` in production         | Whether the session cookie is `Secure`; turned off only to serve a production build over plain HTTP (E2E) |
 
 ## API
 
