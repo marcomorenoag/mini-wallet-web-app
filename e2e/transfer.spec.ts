@@ -101,6 +101,26 @@ test.describe("new transaction", () => {
     await expect(page.getByLabel("Monto")).toHaveValue("100");
   });
 
+  test("changes steps instantly, without a request to the server", async ({ page }) => {
+    await startTransfer(page);
+    // Client-side navigations fetch the RSC payload of the page, flagged by the `rsc` header.
+    const serverRequests: string[] = [];
+    page.on("request", (request) => {
+      if (request.headers()["rsc"]) serverRequests.push(request.url());
+    });
+
+    await goToRecipient(page, "100");
+    await page.getByText("Luis Pérez").click();
+    await page.getByRole("button", { name: "Continuar" }).click();
+    await expect(page).toHaveURL(/\?step=summary$/);
+    await page.getByRole("link", { name: "Regresar" }).click();
+    await expect(page).toHaveURL(/\?step=recipient$/);
+    await page.goBack();
+    await expect(page).toHaveURL(/\?step=summary$/);
+
+    expect(serverRequests).toEqual([]);
+  });
+
   test("restarts at the amount step after a refresh", async ({ page }) => {
     await startTransfer(page);
     await goToRecipient(page, "100");

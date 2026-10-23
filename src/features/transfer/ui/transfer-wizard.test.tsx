@@ -10,7 +10,7 @@ import { renderWithIntl } from "@/test/render-with-intl";
 import { TransferFlowProvider } from "../transfer-flow-context";
 import { TransferWizard } from "./transfer-wizard";
 
-// In-memory router: `?step=` changes re-render the wizard like a client-side navigation.
+// In-memory URL: `?step=` changes re-render the wizard like a client-side navigation.
 const nav = vi.hoisted(() => {
   let url = "/transfer";
   const listeners = new Set<() => void>();
@@ -86,6 +86,10 @@ const completedResponse = (idempotencyKey: string | null) =>
 
 beforeEach(() => {
   nav.go("/transfer");
+  // Steps are changed through the History API, which Next.js syncs with `useSearchParams`.
+  const toNav = (_state: unknown, _title: string, url?: string | URL | null) => nav.go(String(url));
+  vi.spyOn(window.history, "pushState").mockImplementation(toNav);
+  vi.spyOn(window.history, "replaceState").mockImplementation(toNav);
 });
 
 describe("TransferWizard", () => {
@@ -134,6 +138,15 @@ describe("TransferWizard", () => {
     await user.click(screen.getByRole("button", { name: "Confirmar" }));
     await waitFor(() => expect(nav.url).toBe("/voucher/trf_1"));
     expect(idempotencyKey).toMatch(/^[0-9a-f-]{36}$/);
+  });
+
+  it("changes steps through the History API, without a server navigation", async () => {
+    const user = userEvent.setup();
+    renderWizard();
+
+    await fillAmountAndContinue(user, "250");
+    expect(window.history.pushState).toHaveBeenCalledWith(null, "", "/transfer?step=recipient");
+    expect(screen.getByText("Paso 2 de 3")).toBeInTheDocument();
   });
 
   it("saves a new contact and selects it", async () => {

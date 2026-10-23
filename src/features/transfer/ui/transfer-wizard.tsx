@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
+import { LinkPendingIcon } from "@/components/feedback/link-pending-icon";
 import { Button } from "@/components/ui/button";
 import { randomUUID } from "@/lib/random-uuid";
 import { ROUTES } from "@/lib/routes";
@@ -21,21 +22,35 @@ import { TransferFailure, TransferVerifying } from "./transfer-outcome-views";
 
 const indexOf = (step: TransferStep) => TRANSFER_STEPS.indexOf(step);
 
-const PREVIOUS: Record<TransferStep, string> = {
-  amount: ROUTES.home,
-  recipient: `${ROUTES.transfer}?step=amount`,
-  summary: `${ROUTES.transfer}?step=recipient`,
+const PREVIOUS: Record<TransferStep, TransferStep | null> = {
+  amount: null,
+  recipient: "amount",
+  summary: "recipient",
 };
 
-/** Back link of the top bar; it follows the wizard step. */
+/**
+ * Back link of the top bar; it follows the wizard step. Within the flow, the previous step is
+ * applied instantly like "Continuar" (the link is kept so it still works without JavaScript); from
+ * the first step, it goes back home with pending feedback.
+ */
 export function TransferBackLink() {
   const t = useTranslations("transfer");
-  const { step } = useTransferStep();
+  const { step, goTo } = useTransferStep();
+  const previous = PREVIOUS[step];
 
   return (
     <Button asChild variant="ghost" size="icon" aria-label={t("back")}>
-      <Link href={PREVIOUS[step]}>
-        <ArrowLeft aria-hidden />
+      <Link
+        href={previous ? `${ROUTES.transfer}?step=${previous}` : ROUTES.home}
+        // A previous step is applied on the client, so only the way home is worth prefetching.
+        prefetch={previous ? false : "auto"}
+        onClick={(event) => {
+          if (!previous) return;
+          event.preventDefault();
+          goTo(previous);
+        }}
+      >
+        <LinkPendingIcon icon={<ArrowLeft aria-hidden />} />
       </Link>
     </Button>
   );
