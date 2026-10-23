@@ -67,6 +67,20 @@ describe("LoginForm", () => {
     expect(await screen.findByText("No encontramos una cuenta con esos datos.")).toBeVisible();
   });
 
+  it("submits a value that was filled before hydration (no change event)", async () => {
+    const user = userEvent.setup();
+    loginAction.mockResolvedValue({ identifier: "ana@example.com" });
+    renderWithIntl(<LoginForm />);
+
+    // Autofill or typing before React hydrated the page sets the DOM value without `onChange`.
+    (field() as HTMLInputElement).value = "ana@example.com";
+    await user.click(submitButton());
+
+    await waitFor(() => expect(loginAction).toHaveBeenCalledOnce());
+    expect(loginAction.mock.calls[0]?.[1].get("identifier")).toBe("ana@example.com");
+    expect(screen.queryByText("Ingresa tu teléfono o correo electrónico.")).not.toBeInTheDocument();
+  });
+
   it("shows a banner for problems and keeps the typed value", async () => {
     const user = userEvent.setup();
     loginAction.mockResolvedValue({ identifier: "ana@example.com", problem: "NETWORK" });

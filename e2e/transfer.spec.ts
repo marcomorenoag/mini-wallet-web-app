@@ -1,6 +1,6 @@
 import { expect, type Page, test } from "@playwright/test";
 
-import { forceScenario, signIn } from "./support";
+import { delayHydration, forceScenario, signIn } from "./support";
 
 // Diana's account is reserved for flows that create transfers or contacts, since all specs share
 // one in-memory database; Ana and Bruno keep the exact data that other specs assert on.
@@ -119,6 +119,20 @@ test.describe("new transaction", () => {
     await expect(page).toHaveURL(/\?step=summary$/);
 
     expect(serverRequests).toEqual([]);
+  });
+
+  test("keeps an amount typed before the page is interactive", async ({ page, browserName }) => {
+    // The page is streamed behind `loading.tsx`; WebKit only reveals the streamed content once the
+    // held-back scripts load, so the field cannot be reached before hydration there.
+    test.skip(browserName === "webkit", "Streamed content is not revealed without the scripts");
+    await signIn(page, "diana@example.com");
+    const { hydrate } = await delayHydration(page);
+    await page.goto("/transfer", { waitUntil: "commit" });
+    await page.getByLabel("Monto").fill("100");
+    await hydrate();
+
+    await page.getByRole("button", { name: "Continuar" }).click();
+    await expect(page).toHaveURL(/\?step=recipient$/);
   });
 
   test("restarts at the amount step after a refresh", async ({ page }) => {

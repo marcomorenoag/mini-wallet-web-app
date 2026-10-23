@@ -146,6 +146,17 @@ describe("TransferWizard", () => {
     expect(idempotencyKey).toMatch(/^[0-9a-f-]{36}$/);
   });
 
+  it("uses an amount that was filled before hydration (no change event)", async () => {
+    const user = userEvent.setup();
+    renderWizard();
+
+    // Typing before React hydrated the page sets the DOM value without `onChange`.
+    (screen.getByLabelText("Monto") as HTMLInputElement).value = "250";
+    await user.click(continueButton());
+
+    expect(screen.getByText("Paso 2 de 3")).toBeInTheDocument();
+  });
+
   it("changes steps through the History API, without a server navigation", async () => {
     const user = userEvent.setup();
     renderWizard();
