@@ -12,15 +12,19 @@ import type { UserSchema } from "@/domain/user/user";
  * Login identifiers:
  * - Ana López (rich history): `ana@example.com` or `55 1234 5678`
  * - Bruno Díaz (empty state, no movements nor contacts): `bruno@example.com` or `55 8765 4321`
+ * - Diana Torres (contacts, no movements; used by E2E flows that create transfers, so the
+ *   accounts above keep their exact data): `diana@example.com` or `55 2468 1357`
  */
 export const userFixtures = [
   { id: "usr_ana", name: "Ana López", email: "ana@example.com", phone: "+525512345678" },
   { id: "usr_bruno", name: "Bruno Díaz", email: "bruno@example.com", phone: "+525587654321" },
+  { id: "usr_diana", name: "Diana Torres", email: "diana@example.com", phone: "+525524681357" },
 ] as const satisfies readonly z.input<typeof UserSchema>[];
 
 export const accountFixtures = [
   { id: "acc_ana", ownerId: "usr_ana", balance: { amount: 1_250_000, currency: "MXN" } },
   { id: "acc_bruno", ownerId: "usr_bruno", balance: { amount: 50_000, currency: "MXN" } },
+  { id: "acc_diana", ownerId: "usr_diana", balance: { amount: 5_000_000, currency: "MXN" } },
 ] as const satisfies readonly z.input<typeof AccountSchema>[];
 
 const ana = (
@@ -69,5 +73,19 @@ export const contactFixtures = [
     name: "Carlos Gómez",
     phone: "+525555556666",
     isFavorite: false,
+  },
+  {
+    id: "cnt_diana_luis",
+    ownerId: "usr_diana",
+    name: "Luis Pérez",
+    phone: "+525511112222",
+    isFavorite: true,
+  },
+  {
+    id: "cnt_diana_marta",
+    ownerId: "usr_diana",
+    name: "Marta Ruiz",
+    phone: "+525533334444",
+    isFavorite: true,
   },
 ] as const satisfies readonly z.input<typeof ContactSchema>[];

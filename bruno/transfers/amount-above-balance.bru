@@ -1,0 +1,34 @@
+meta {
+  name: Amount above the balance
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/api/v1/transfers
+  body: json
+  auth: none
+}
+
+headers {
+  Idempotency-Key: {{idempotencyKey}}
+}
+
+body:json {
+  {
+    "amount": { "amount": 100000000, "currency": "MXN" },
+    "recipientId": "cnt_luis"
+  }
+}
+
+script:pre-request {
+  // One key per confirmation; it is reused on retries so the transfer is never applied twice.
+  bru.setVar("idempotencyKey", bru.interpolate("{{$randomUUID}}"));
+}
+
+tests {
+  test("is rejected by the business rules", function () {
+    expect(res.getStatus()).to.equal(422);
+    expect(res.getBody().code).to.equal("INSUFFICIENT_FUNDS");
+  });
+}

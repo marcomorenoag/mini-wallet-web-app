@@ -62,3 +62,17 @@ export const formatDateTime = (
     `${locale}|${style}`,
     () => new Intl.DateTimeFormat(locale, { ...DATE_TIME_STYLES[style], timeZone: TIME_ZONE }),
   ).format(typeof value === "string" ? new Date(value) : value);
+
+/**
+ * Formats an E.164 Mexican phone number for display: "+525511112222" → "55 1111 2222", or
+ * "55 •••• 2222" when masked (summaries and vouchers). Other numbers are returned unchanged.
+ */
+export const formatPhone = (
+  e164: string,
+  { masked = false }: { masked?: boolean } = {},
+): string => {
+  const match = /^\+52(\d{2})(\d{4})(\d{4})$/.exec(e164);
+  if (!match) return e164;
+  const [, area, middle, last] = match;
+  return `${area} ${masked ? "••••" : middle} ${last}`;
+};

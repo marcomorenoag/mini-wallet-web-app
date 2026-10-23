@@ -38,6 +38,101 @@
     "errorTitle": "No pudimos iniciar sesión",
     "demoAccounts": "Cuentas de prueba: ana@example.com o 55 1234 5678 (con movimientos), bruno@example.com (sin movimientos)."
   },
+  "home": {
+    "metadataTitle": "Inicio",
+    "greeting": "Hola, {name}",
+    "logout": "Salir",
+    "balanceLabel": "Saldo disponible",
+    "newTransfer": "Nueva transferencia",
+    "movementsTitle": "Movimientos recientes",
+    "movement": {
+      "DEPOSIT": "{name}",
+      "TRANSFER_IN": "Recibido de {name}",
+      "TRANSFER_OUT": "Envío a {name}"
+    },
+    "movementKind": {
+      "credit": "Ingreso",
+      "debit": "Cargo"
+    },
+    "emptyTitle": "Aún no tienes movimientos",
+    "emptyDescription": "Cuando envíes o recibas dinero, aparecerá aquí.",
+    "errorTitle": "No pudimos cargar tu información",
+    "errorDescription": "Revisa tu conexión e intenta de nuevo."
+  },
+  "transfer": {
+    "metadataTitle": "Nueva transferencia",
+    "title": "Nueva transferencia",
+    "back": "Regresar",
+    "stepProgress": "Paso {current} de {total}",
+    "amount": {
+      "title": "¿Cuánto quieres enviar?",
+      "label": "Monto",
+      "available": "Saldo disponible: {balance}",
+      "continue": "Continuar"
+    },
+    "recipient": {
+      "title": "¿A quién se lo envías?",
+      "favorites": "Favoritos",
+      "others": "Otros contactos",
+      "empty": "Aún no tienes contactos guardados. Agrega uno nuevo.",
+      "new": "Nuevo contacto",
+      "continue": "Continuar"
+    },
+    "newContact": {
+      "title": "Nuevo contacto",
+      "name": "Nombre",
+      "namePlaceholder": "Ej. Sofía Martínez",
+      "phone": "Teléfono",
+      "phonePlaceholder": "55 1234 5678",
+      "save": "Guardar en favoritos",
+      "saving": "Guardando…",
+      "cancel": "Cancelar",
+      "errorTitle": "No pudimos guardar el contacto"
+    },
+    "summary": {
+      "title": "Revisa tu transferencia",
+      "to": "Para",
+      "amount": "Monto",
+      "fee": "Comisión",
+      "total": "Total",
+      "confirm": "Confirmar",
+      "confirming": "Enviando…",
+      "cancel": "Cancelar"
+    },
+    "errorTitle": "No pudimos preparar tu transferencia",
+    "errorDescription": "Revisa tu conexión e intenta de nuevo.",
+    "verifying": {
+      "title": "Estamos confirmando tu transferencia",
+      "description": "La red de pagos está tardando más de lo normal. No cierres esta pantalla ni la envíes de nuevo."
+    },
+    "failure": {
+      "title": "No pudimos completar la transferencia",
+      "INSUFFICIENT_FUNDS": "Tu saldo no alcanza para esta transferencia. Ajusta el monto e intenta de nuevo.",
+      "NETWORK": "Hubo un problema de conexión con la red de pagos. No se hizo ningún cargo; puedes reintentar sin riesgo de un cobro doble.",
+      "TIMEOUT": "La red de pagos no respondió a tiempo y aún no sabemos si se completó. Consulta el estado antes de volver a intentarlo.",
+      "UNKNOWN": "Ocurrió un error inesperado. No se hizo ningún cargo; puedes reintentar en unos momentos.",
+      "retry": "Reintentar",
+      "checkStatus": "Consultar estado",
+      "changeAmount": "Cambiar monto"
+    }
+  },
+  "voucher": {
+    "metadataTitle": "Comprobante",
+    "title": "Comprobante",
+    "success": "¡Transferencia exitosa!",
+    "folio": "Folio",
+    "to": "Para",
+    "amount": "Monto",
+    "date": "Fecha",
+    "status": "Estado",
+    "completed": "Completada",
+    "backToHome": "Volver al inicio",
+    "share": "Compartir comprobante",
+    "copied": "Comprobante copiado",
+    "shareText": "Transferencia de {amount} a {name} · Folio {folio} · {date}",
+    "errorTitle": "No pudimos cargar el comprobante",
+    "errorDescription": "Revisa tu conexión e intenta de nuevo."
+  },
   "errors": {
     "validation": {
       "IDENTIFIER_REQUIRED": "Ingresa tu teléfono o correo electrónico.",

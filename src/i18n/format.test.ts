@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { money } from "@/domain/money/money";
 
-import { formatDateTime, formatMoney } from "./format";
+import { formatDateTime, formatMoney, formatPhone } from "./format";
 
 describe("formatMoney", () => {
   it("formats minor units as es-MX currency", () => {
@@ -33,5 +33,16 @@ describe("formatDateTime", () => {
 
   it("supports a long style for vouchers", () => {
     expect(formatDateTime(new Date(timestamp), "long")).toBe("21 oct 2026, 10:42 a.m.");
+  });
+});
+
+describe("formatPhone", () => {
+  it("groups Mexican numbers and can mask the middle digits", () => {
+    expect(formatPhone("+525511112222")).toBe("55 1111 2222");
+    expect(formatPhone("+525511112222", { masked: true })).toBe("55 •••• 2222");
+  });
+
+  it("leaves other numbers untouched", () => {
+    expect(formatPhone("+14155550100")).toBe("+14155550100");
   });
 });

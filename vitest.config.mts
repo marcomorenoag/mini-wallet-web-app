@@ -29,6 +29,7 @@ export default defineConfig({
           include: [
             "src/{domain,application,adapters,server,test,contracts,i18n}/**/*.test.ts",
             "src/app/api/**/*.test.ts",
+            "src/app/**/route.test.ts",
             "src/proxy.test.ts",
           ],
         },
@@ -43,6 +44,7 @@ export default defineConfig({
           exclude: [
             "src/{domain,application,adapters,server,test,contracts,i18n}/**",
             "src/app/api/**",
+            "src/app/**/route.test.ts",
             "src/proxy.test.ts",
           ],
         },

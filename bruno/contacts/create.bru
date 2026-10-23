@@ -1,0 +1,31 @@
+meta {
+  name: Create contact
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/contacts
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Contacto de prueba",
+    "phone": "{{contactPhone}}",
+    "isFavorite": true
+  }
+}
+
+script:pre-request {
+  // A new phone on every run, since a repeated phone is rejected as a duplicate.
+  bru.setVar("contactPhone", "55" + String(Date.now() % 1e8).padStart(8, "0"));
+}
+
+tests {
+  test("saves the contact", function () {
+    expect(res.getStatus()).to.equal(201);
+    expect(res.getBody().isFavorite).to.equal(true);
+  });
+}

@@ -239,6 +239,27 @@ describe("POST /api/v1/transfers", () => {
   });
 });
 
+describe("GET /api/v1/transfers?idempotencyKey=", () => {
+  it("ignores forced faults, since the scenario describes the payment", async () => {
+    const session = await loginAs("ana@example.com");
+    await postTransfer(session, { [MOCK_SCENARIO_HEADER]: "SUCCESS" });
+
+    const { status, body } = await call(transfers.GET, {
+      session,
+      path: `/?idempotencyKey=${KEY}`,
+      headers: { [MOCK_SCENARIO_HEADER]: "NETWORK" },
+    });
+    expect(status).toBe(200);
+    expect(body).toMatchObject({ status: "COMPLETED" });
+  });
+
+  it("returns 404 for an unknown key", async () => {
+    const session = await loginAs("ana@example.com");
+    const { status } = await call(transfers.GET, { session, path: `/?idempotencyKey=${KEY}` });
+    expect(status).toBe(404);
+  });
+});
+
 describe("GET /api/v1/transfers/{id}", () => {
   it("returns the voucher to its owner only", async () => {
     const ana = await loginAs("ana@example.com");

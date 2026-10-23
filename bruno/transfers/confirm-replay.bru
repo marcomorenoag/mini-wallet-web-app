@@ -1,0 +1,30 @@
+meta {
+  name: Replay the same confirmation
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/transfers
+  body: json
+  auth: none
+}
+
+headers {
+  Idempotency-Key: {{idempotencyKey}}
+  x-mock-scenario: SUCCESS
+}
+
+body:json {
+  {
+    "amount": { "amount": 10000, "currency": "MXN" },
+    "recipientId": "cnt_luis"
+  }
+}
+
+tests {
+  test("returns the original transfer instead of charging again", function () {
+    expect(res.getStatus()).to.equal(201);
+    expect(res.getBody().transfer.id).to.equal(bru.getVar("transferId"));
+  });
+}

@@ -2,35 +2,25 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { resetMockDatabase } from "@/adapters/mock/mock-database";
 import { SESSION_COOKIE } from "@/server/http/cookie-names";
+import { createFakeRequest, Redirect } from "@/test/next-request-mocks";
 
 import { loginAction } from "./actions";
 import { INITIAL_LOGIN_STATE } from "./login-form-state";
 
 const request = vi.hoisted(() => ({
-  headers: new Headers(),
-  cookies: new Map<string, { value: string; options?: unknown }>(),
+  current: undefined as never as ReturnType<typeof createFakeRequest>,
 }));
 
-vi.mock("next/headers", () => ({
-  headers: async () => request.headers,
-  cookies: async () => ({
-    get: (name: string) => request.cookies.get(name),
-    set: (name: string, value: string, options: unknown) =>
-      request.cookies.set(name, { value, options }),
-  }),
-}));
-
-// `redirect` throws a control-flow signal in Next.js; the destination is captured instead.
-class Redirect extends Error {
-  constructor(readonly url: string) {
-    super(`redirect ${url}`);
-  }
-}
-vi.mock("next/navigation", () => ({
-  redirect: (url: string) => {
-    throw new Redirect(url);
-  },
-}));
+vi.mock("next/headers", async () => {
+  const { nextHeadersMock } = await import("@/test/next-request-mocks");
+  return {
+    headers: () => nextHeadersMock(request.current).headers(),
+    cookies: () => nextHeadersMock(request.current).cookies(),
+  };
+});
+vi.mock("next/navigation", async () =>
+  (await import("@/test/next-request-mocks")).nextNavigationMock(),
+);
 
 const form = (fields: Record<string, string>) => {
   const data = new FormData();
@@ -42,8 +32,7 @@ const submit = (fields: Record<string, string>) => loginAction(INITIAL_LOGIN_STA
 
 beforeEach(() => {
   resetMockDatabase();
-  request.headers = new Headers();
-  request.cookies.clear();
+  request.current = createFakeRequest();
 });
 
 describe("loginAction", () => {
@@ -52,7 +41,7 @@ describe("loginAction", () => {
       new Redirect("/transfer"),
     );
 
-    expect(request.cookies.get(SESSION_COOKIE)).toMatchObject({
+    expect(request.current.cookies.get(SESSION_COOKIE)).toMatchObject({
       value: expect.any(String),
       options: { httpOnly: true, sameSite: "lax", path: "/" },
     });
@@ -73,11 +62,11 @@ describe("loginAction", () => {
       identifier: "",
       fieldError: "IDENTIFIER_REQUIRED",
     });
-    expect(request.cookies.has(SESSION_COOKIE)).toBe(false);
+    expect(request.current.cookies.has(SESSION_COOKIE)).toBe(false);
   });
 
   it("returns a problem on a simulated network failure", async () => {
-    request.headers.set("x-mock-scenario", "NETWORK");
+    request.current.headers.set("x-mock-scenario", "NETWORK");
     expect(await submit({ identifier: "ana@example.com" })).toEqual({
       identifier: "ana@example.com",
       problem: "NETWORK",
@@ -86,7 +75,7 @@ describe("loginAction", () => {
 
   it("hides unexpected errors behind UNKNOWN", async () => {
     const consoleError = vi.spyOn(console, "error").mockImplementation(() => undefined);
-    request.headers = {
+    request.current.headers = {
       get: () => {
         throw new Error("internal detail");
       },

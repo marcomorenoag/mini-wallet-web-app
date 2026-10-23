@@ -1,0 +1,25 @@
+meta {
+  name: Create a duplicate contact
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/v1/contacts
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Contacto repetido",
+    "phone": "{{contactPhone}}"
+  }
+}
+
+tests {
+  test("is rejected as a duplicate phone", function () {
+    expect(res.getStatus()).to.equal(422);
+    expect(res.getBody().issues).to.deep.equal([{ field: "phone", code: "CONTACT_ALREADY_EXISTS" }]);
+  });
+}

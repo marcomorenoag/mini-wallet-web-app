@@ -86,6 +86,49 @@ The login module was implemented by the AI on the `feat/phase-06-login` branch, 
 - Unit tests for the action, the form and the redirect validation, and E2E tests for the flow, faults, redirects and the no-JavaScript path.
 - E2E tests moved to a production build on a dedicated port, after a dev-server HMR reload loop under the test runner was diagnosed.
 
+### Phase 7 — Home
+
+The Home module was implemented by the AI on the `feat/phase-07-home` branch, stacked on the login branch:
+
+- A data access layer (`getCurrentUser`) that verifies the session on every request, with a `/session-expired` route that clears stale cookies without a redirect loop.
+- A server-rendered Home: the header (greeting, theme toggle, logout) in the segment layout, and the balance and movements streamed behind skeletons, with an empty state and an error state with retry.
+- A logout Server Action that works without JavaScript.
+- Unit tests for the data access layer, logout, the session-expired route and the Home components, and E2E tests for data, empty and error states, logout, stale sessions and theme switching.
+
+### Phase 8 — New transaction
+
+The transfer flow was implemented by the AI on the `feat/phase-08-new-transaction` branch, stacked on the Home branch:
+
+- A scoped `TransferFlowProvider` (Context + `useReducer`) holding the draft and its idempotency key, with the wizard step kept in `?step=` and steps without their prerequisites sent back to the first gap.
+- Amount, recipient and summary steps: business rules checked on the client with the shared domain functions, favorite contacts, an inline form that saves a new favorite through the API, a masked phone on the summary, and focus moved to each step title.
+- A typed browser client for the v1 API that validates responses against the contracts, and a server loader for the balance and contacts with an error state.
+- MSW-based tests for the API client and the wizard, and E2E tests for the flow; a demo account reserved for flows that create transfers keeps E2E specs independent of each other.
+
+### Phase 9 — Confirmation and voucher
+
+The confirmation outcomes and the voucher were implemented by the AI on the `feat/phase-09-voucher` branch, stacked on the transfer branch:
+
+- A confirmation routine (pure and injectable) that aborts the request after a client timeout and then recovers the outcome by idempotency key instead of resending it; pending duplicates are polled the same way.
+- A failure screen per error code with the next safe action: change the amount (insufficient funds, with a new key), retry with the same key (network, unknown) or check the status again (timeout).
+- A server-rendered voucher by transfer id, scoped to its owner (404 otherwise), with a native share sheet or a copy fallback.
+- Unit tests for the confirmation routine, the failure paths of the wizard and the voucher, and E2E tests for all five scenarios.
+
+### Phase 10 — E2E tests
+
+The E2E suite was completed by the AI on the `feat/phase-10-e2e` branch, stacked on the voucher branch. Most flows had already been covered phase by phase, so the gaps were filled:
+
+- Automated WCAG 2.1 AA checks with axe on every screen and state (login errors, Home with data, empty and error states, each transfer step, the failure screen, the voucher and the not-found page), in both themes.
+- A real contrast defect was found by those checks: the primary button hover (shadcn default `bg-primary/80`) dropped white text to 3.92:1, so it was darkened instead of made translucent.
+- A keyboard-only transfer (Tab, Enter, Space and arrow keys), the skip link and the theme menu.
+
+### Phase 11 — Documentation
+
+The documentation was completed by the AI on the `feat/phase-11-docs` branch, stacked on the E2E branch:
+
+- The open sections of `DECISIONS.md` (project structure, UI and business logic separation, edge cases, and what would be done differently), written from the implemented code. Planned items that were not delivered (Lighthouse CI, bundle and Web Vitals budgets, the CI pipeline) are listed there instead of being presented as done.
+- A Bruno collection for every v1 endpoint, with assertions on each request. It was run twice in a row against a production build to confirm that it can be repeated.
+- README updates: the collection, the extra test tooling and the current `npm audit` findings.
+
 ### Accepted
 
 - Patched dependency versions and the Node 24 LTS pin.
